@@ -1,0 +1,17 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class TransaksiPenjualan extends Model
+{
+    protected $table = 'transaksi_penjualan';
+    protected $primaryKey = 'id_transaksi';
+    protected $fillable = ['id_sesi', 'waktu_transaksi', 'total_harga', 'bayar', 'kembalian'];
+
+    public function detailTransaksi()
+    {
+        return $this->hasMany(DetailTransaksi::class, 'id_transaksi', 'id_transaksi');
+    }
+}
