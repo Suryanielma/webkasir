@@ -1,0 +1,264 @@
+@extends('layouts.app')
+
+@section('content')
+<!-- Flatpickr CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+<div class="flex justify-between items-center mb-8">
+    <h2 class="text-2xl font-bold tracking-tight">Dashboard</h2>
+    <div class="relative group">
+        <input type="text" id="datePicker" class="bg-[#d8dbbc] text-[#333] pl-4 pr-8 py-2 rounded-full text-xs font-semibold cursor-pointer shadow-sm outline-none w-28 text-center" value="29/04/2025" readonly>
+        <span class="material-icons-outlined text-xs absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-[#333]">arrow_drop_down</span>
+    </div>
+</div>
+
+<div class="flex flex-col gap-6">
+    <!-- Top Row -->
+    <div class="flex gap-6">
+        <!-- Col 1 -->
+        <div class="flex flex-col gap-6 w-1/4">
+            <!-- Transaksi Hari Ini -->
+            <div class="border border-gray-400/40 rounded-2xl p-6 bg-transparent h-full flex flex-col justify-between shadow-sm">
+                <h3 class="text-base font-semibold text-gray-800">Transaksi<br>Hari Ini</h3>
+                <div>
+                    <div class="text-3xl font-bold text-gray-900 my-4">150</div>
+                    <div class="bg-[#8b9967] text-white text-[10px] px-3 py-1 rounded-full w-max font-medium shadow-sm">Transaksi Selesai</div>
+                </div>
+            </div>
+
+            <!-- Pendapatan -->
+            <div class="border border-gray-400/40 rounded-2xl p-6 bg-transparent h-full flex flex-col justify-between shadow-sm">
+                <h3 class="text-base font-semibold text-gray-800">Pendapatan</h3>
+                <div>
+                    <div class="text-3xl font-bold text-gray-900 my-4">4.5 jt</div>
+                    <div class="bg-[#e45126] text-white text-[10px] px-3 py-1 rounded-full w-max font-medium shadow-sm">Rupiah (IDR)</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Col 2 -->
+        <div class="flex flex-col gap-6 w-1/4">
+            <!-- Menu Tersedia -->
+            <div class="border border-gray-400/40 rounded-2xl p-6 bg-transparent h-full flex flex-col justify-between shadow-sm">
+                <h3 class="text-base font-semibold text-gray-800">Menu<br>Tersedia</h3>
+                <div>
+                    <div class="text-3xl font-bold text-gray-900 my-4">15</div>
+                    <div class="bg-[#4a8a25] text-white text-[10px] px-3 py-1 rounded-full w-max font-medium shadow-sm">Dari 19 Menu</div>
+                </div>
+            </div>
+
+            <!-- Menu Habis -->
+            <div class="border border-gray-400/40 rounded-2xl p-6 bg-transparent h-full flex flex-col justify-between shadow-sm">
+                <h3 class="text-base font-semibold text-gray-800">Menu Habis</h3>
+                <div>
+                    <div class="text-3xl font-bold text-gray-900 my-4">4</div>
+                    <div class="bg-[#d9822b] text-white text-[10px] px-3 py-1 rounded-full w-max font-medium shadow-sm">Perlu Diisi Ulang</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Col 3: Grafik -->
+        <div class="w-2/4">
+            <div class="border border-gray-400/40 rounded-2xl p-6 bg-transparent h-full flex flex-col shadow-sm">
+                <h3 class="text-base font-semibold text-gray-800 mb-4">Grafik Penjualan</h3>
+                <div class="flex-grow w-full relative h-48">
+                    <!-- Canvas for Chart.js -->
+                    <canvas id="salesChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Row -->
+    <div class="flex gap-6">
+        <!-- Item Terjual -->
+        <div class="w-1/4">
+            <div class="border border-gray-400/40 rounded-2xl p-6 bg-transparent h-full flex flex-col items-center justify-center text-center shadow-sm">
+                <h3 class="text-base font-semibold text-gray-800 mb-6 w-full text-left">Item Terjual</h3>
+                <span class="material-icons-outlined text-[#7a5924] text-3xl mb-4">fastfood</span>
+                <div class="text-3xl font-bold text-gray-900 mb-4">213</div>
+                <div class="bg-[#7a5924] text-white text-[10px] px-3 py-1 rounded-full w-max font-medium shadow-sm">Porsi Per-hari ini</div>
+                <div class="mt-4"></div>
+            </div>
+        </div>
+
+        <!-- Menu Terlaris -->
+        <div class="w-auto flex-grow" style="width: 37.5%;">
+            <div class="border border-gray-400/40 rounded-2xl p-6 bg-transparent h-full shadow-sm">
+                <h3 class="text-base font-semibold text-gray-800 mb-4">Menu Terlaris</h3>
+                
+                <table class="w-full text-xs text-left">
+                    <thead>
+                        <tr class="border-b border-gray-400/40 font-semibold text-gray-800">
+                            <th class="py-2 pb-3 w-10">#</th>
+                            <th class="py-2 pb-3">Nama Menu</th>
+                            <th class="py-2 pb-3 text-right">Terjual</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-gray-700">
+                        @for ($i = 1; $i <= 5; $i++)
+                        <tr class="border-b border-gray-400/40 last:border-0">
+                            <td class="py-3">
+                                <span class="bg-[#9e9d7c] text-white w-6 h-6 rounded-full inline-flex items-center justify-center text-[10px]">
+                                    {{ $i }}
+                                </span>
+                            </td>
+                            <td class="py-3">Es Teh Manis</td>
+                            <td class="py-3 text-right text-green-600 font-medium whitespace-nowrap">200 Porsi</td>
+                        </tr>
+                        @endfor
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Status Menu -->
+         <div class="w-auto flex-grow" style="width: 37.5%;">
+            <div class="border border-gray-400/40 rounded-2xl p-6 bg-transparent h-full shadow-sm">
+                <h3 class="text-base font-semibold text-gray-800 mb-4">Status Menu</h3>
+                
+                <table class="w-full text-xs text-left">
+                    <thead>
+                        <tr class="border-b border-gray-400/40 font-semibold text-gray-800">
+                            <th class="py-2 pb-3">Menu</th>
+                            <th class="py-2 pb-3">Status</th>
+                            <th class="py-2 pb-3 text-right">Stok</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-gray-700">
+                        <tr class="border-b border-gray-400/40">
+                            <td class="py-3">Soto Ayam</td>
+                            <td class="py-3 flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-green-500"></span> Tersedia</td>
+                            <td class="py-3 text-right text-green-600">50 Porsi</td>
+                        </tr>
+                        <tr class="border-b border-gray-400/40">
+                            <td class="py-3">Soto Daging</td>
+                            <td class="py-3 flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-green-500"></span> Tersedia</td>
+                            <td class="py-3 text-right text-green-600">52 Porsi</td>
+                        </tr>
+                        <tr class="border-b border-gray-400/40">
+                            <td class="py-3">Es Teh Manis</td>
+                            <td class="py-3 flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-yellow-500"></span> Hampir Habis</td>
+                            <td class="py-3 text-right text-yellow-600">5 Porsi</td>
+                        </tr>
+                        <tr class="border-b border-gray-400/40">
+                            <td class="py-3">Es Jeruk</td>
+                            <td class="py-3 flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-green-500"></span> Tersedia</td>
+                            <td class="py-3 text-right text-green-600">42 Porsi</td>
+                        </tr>
+                        <tr>
+                            <td class="py-3">Nasi Putih</td>
+                            <td class="py-3 flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-red-500"></span> Habis</td>
+                            <td class="py-3 text-right text-red-500">0 Porsi</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        if(typeof Chart !== 'undefined') {
+            const ctx = document.getElementById('salesChart').getContext('2d');
+            
+            // Gradient fill
+            let gradient = ctx.createLinearGradient(0, 0, 0, 300);
+            gradient.addColorStop(0, 'rgba(235, 76, 32, 0.4)');
+            gradient.addColorStop(1, 'rgba(235, 76, 32, 0)');
+            
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'],
+                    datasets: [{
+                        label: 'Penjualan',
+                        data: [70000, 380000, 320000, 680000, 480000, 950000, 950000],
+                        borderColor: '#e24d17',
+                        borderWidth: 3,
+                        pointBackgroundColor: '#e24d17',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: '#e24d17',
+                        pointRadius: 0,
+                        pointHoverRadius: 5,
+                        fill: false,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== null) {
+                                        label += new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(context.parsed.y);
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 1000000,
+                            ticks: {
+                                callback: function(value, index, ticks) {
+                                    if(value === 0) return '0';
+                                    return (value / 1000) + '.000';
+                                },
+                                stepSize: 200000,
+                                font: {
+                                    family: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+                                    size: 11
+                                },
+                                color: '#666'
+                            },
+                            grid: {
+                                color: 'rgba(0,0,0,0.1)',
+                                drawBorder: false
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false,
+                                drawBorder: true,
+                                borderColor: 'rgba(0,0,0,0.2)'
+                            },
+                            ticks: {
+                                font: {
+                                    family: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+                                    size: 11
+                                },
+                                color: '#666'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Initialize Flatpickr Calendar
+        if (typeof flatpickr !== 'undefined') {
+            flatpickr("#datePicker", {
+                dateFormat: "d/m/Y",
+                defaultDate: "29/04/2025",
+                disableMobile: true
+            });
+        }
+    });
+</script>
+<!-- Flatpickr JS -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+@endpush
+@endsection
