@@ -5,23 +5,23 @@
     </div>
 
     <nav class="space-y-1 flex-grow">
-        <a href="{{ route('dashboard') }}" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl bg-[#f4ebd0] text-[#785b27] font-medium text-sm">
+        <a href="{{ route('dashboard') }}" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl transition font-medium text-sm {{ request()->routeIs('dashboard') ? 'bg-[#f4ebd0] text-[#785b27]' : 'text-white hover:bg-white/20' }}">
             <span class="material-icons-outlined !text-[20px]">dashboard</span>
             <span>Dashboard</span>
         </a>
-        <a href="#" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-white hover:bg-white/20 transition font-medium text-sm">
+        <a href="{{ route('transaksi') }}" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl transition font-medium text-sm {{ request()->routeIs('transaksi') ? 'bg-[#f4ebd0] text-[#785b27]' : 'text-white hover:bg-white/20' }}">
             <span class="material-icons-outlined !text-[20px]">shopping_cart</span>
             <span>Transaksi</span>
         </a>
-        <a href="#" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-white hover:bg-white/20 transition font-medium text-sm">
+        <a href="{{ route('menu') }}" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl transition font-medium text-sm {{ request()->routeIs('menu', 'kategori.*', 'produk.*') ? 'bg-[#f4ebd0] text-[#785b27]' : 'text-white hover:bg-white/20' }}">
             <span class="material-icons-outlined !text-[20px]">menu_book</span>
             <span>Menu</span>
         </a>
-        <a href="#" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-white hover:bg-white/20 transition font-medium text-sm">
+        <a href="{{ route('bahan-baku') }}" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl transition font-medium text-sm {{ request()->routeIs('bahan-baku') ? 'bg-[#f4ebd0] text-[#785b27]' : 'text-white hover:bg-white/20' }}">
             <span class="material-icons-outlined !text-[20px]">restaurant</span>
             <span>Bahan Baku</span>
         </a>
-        <a href="#" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-white hover:bg-white/20 transition font-medium text-sm">
+        <a href="{{ route('laporan') }}" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl transition font-medium text-sm {{ request()->routeIs('laporan') ? 'bg-[#f4ebd0] text-[#785b27]' : 'text-white hover:bg-white/20' }}">
             <span class="material-icons-outlined !text-[20px]">receipt_long</span>
             <span>Laporan</span>
         </a>
