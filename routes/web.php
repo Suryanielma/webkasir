@@ -16,7 +16,6 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::middleware('auth')->group(function () {
     Route::view('/dashboard', 'dashboard')->name('dashboard');
     Route::view('/transaksi', 'transaksi')->name('transaksi');
-    Route::view('/bahan-baku', 'bahan-baku')->name('bahan-baku');
     Route::view('/laporan', 'laporan')->name('laporan');
 
     // Menu — load kategori & produk, support filter
@@ -32,6 +31,10 @@ Route::middleware('auth')->group(function () {
         return view('menu', compact('kategoris', 'semua_produk'));
     })->name('menu');
 
+    Route::view('/menu', 'menu')->name('menu');
+    Route::view('/laporan', 'laporan')->name('laporan');
+    
+    Route::resource('bahan-baku', BahanBakuController::class);
     Route::resource('kategori', KategoriController::class);
     Route::resource('produk', ProdukController::class);
     Route::patch('produk/{id}/toggle-status', [ProdukController::class, 'toggleStatus'])->name('produk.toggleStatus');
