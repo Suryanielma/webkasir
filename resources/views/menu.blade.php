@@ -20,7 +20,6 @@
         {{-- Tanggal --}}
         <div class="flex items-center gap-1 border border-gray-300 text-gray-700 font-medium px-4 py-2 rounded-xl text-sm">
             <span>{{ \Carbon\Carbon::now()->format('d/m/Y') }}</span>
-            <!-- <span class="material-icons-outlined !text-[16px]">expand_more</span> -->
         </div>
     </div>
 </div>
@@ -127,11 +126,15 @@
                         Rp {{ number_format($produk->harga, 0, ',', '.') }}
                     </td>
                     <td class="px-6 py-4">
-                        @if(($produk->status ?? 'tersedia') === 'tersedia')
-                            <span class="bg-green-50 text-green-600 text-xs font-medium px-3 py-1 rounded-full border border-green-200">Tersedia</span>
-                        @else
-                            <span class="bg-red-50 text-red-500 text-xs font-medium px-3 py-1 rounded-full border border-red-200">Habis</span>
-                        @endif
+                        <button
+                            onclick="toggleStatus(this, {{ $produk->id_produk }})"
+                            data-status="{{ $produk->status }}"
+                            class="text-xs font-medium px-3 py-1 rounded-full border transition-all cursor-pointer
+                                {{ ($produk->status ?? 'tersedia') === 'tersedia'
+                                    ? 'bg-green-50 text-green-600 border-green-200 hover:bg-green-100'
+                                    : 'bg-red-50 text-red-500 border-red-200 hover:bg-red-100' }}">
+                            {{ ($produk->status ?? 'tersedia') === 'tersedia' ? 'Tersedia' : 'Habis' }}
+                        </button>
                     </td>
                     <td class="px-6 py-4">
                         <div class="flex justify-center gap-2">
@@ -216,7 +219,7 @@
 
         const btnProduk   = document.getElementById('btn-produk');
         const btnKategori = document.getElementById('btn-kategori');
-        const activeClass = 'flex items-center gap-1 font-medium px-4 py-2 rounded-xl text-sm transition bg-[#c5cb9f] text-[#5a4a2f]';
+        const activeClass   = 'flex items-center gap-1 font-medium px-4 py-2 rounded-xl text-sm transition bg-[#c5cb9f] text-[#5a4a2f]';
         const inactiveClass = 'flex items-center gap-1 font-medium px-4 py-2 rounded-xl text-sm transition border border-gray-300 text-gray-700 hover:bg-gray-50';
 
         if (tab === 'produk') {
@@ -228,11 +231,9 @@
         }
     }
 
-    // Buka tab sesuai ?tab= di URL
     const activeTab = new URLSearchParams(window.location.search).get('tab') || 'produk';
     switchTab(activeTab);
 
-    // Dropdown filter
     function toggleDropdown(id) {
         document.querySelectorAll('[id^="filter-"]').forEach(function(el) {
             if (el.id !== id) el.classList.add('hidden');
@@ -247,5 +248,33 @@
             });
         }
     });
+
+    function toggleStatus(btn, id) {
+        btn.disabled = true;
+        btn.style.opacity = '0.5';
+
+        fetch(`/produk/${id}/toggle-status`, {
+            method: 'PATCH',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                'Accept': 'application/json',
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
+            const status = data.status;
+            btn.dataset.status = status;
+            btn.textContent = status === 'tersedia' ? 'Tersedia' : 'Habis';
+            btn.className = 'text-xs font-medium px-3 py-1 rounded-full border transition-all cursor-pointer ' +
+                (status === 'tersedia'
+                    ? 'bg-green-50 text-green-600 border-green-200 hover:bg-green-100'
+                    : 'bg-red-50 text-red-500 border-red-200 hover:bg-red-100');
+        })
+        .catch(() => alert('Gagal update status, coba lagi.'))
+        .finally(() => {
+            btn.disabled = false;
+            btn.style.opacity = '1';
+        });
+    }
 </script>
 @endpush
