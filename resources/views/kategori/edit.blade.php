@@ -8,7 +8,7 @@
             class="p-2 hover:bg-gray-100 rounded-xl transition">
             <span class="material-icons-outlined text-gray-500">arrow_back</span>
         </a>
-        <h2 class="text-2xl font-bold tracking-tight">Tambah Kategori</h2>
+        <h2 class="text-2xl font-bold tracking-tight">Edit Kategori</h2>
     </div>
 
     @if($errors->any())
@@ -21,9 +21,10 @@
     </div>
     @endif
 
-    <form action="{{ route('kategori.store') }}" method="POST"
+    <form action="{{ route('kategori.update', $kategori->id_kategori) }}" method="POST"
         class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 space-y-6">
         @csrf
+        @method('PUT')
 
         {{-- Nama Kategori --}}
         <div>
@@ -31,7 +32,7 @@
                 Nama Kategori <span class="text-red-400">*</span>
             </label>
             <input type="text" name="nama_kategori"
-                value="{{ old('nama_kategori') }}"
+                value="{{ old('nama_kategori', $kategori->nama_kategori) }}"
                 placeholder="cth: Makanan, Minuman, Pendamping"
                 class="w-full px-4 py-2.5 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#c5cb9f] @error('nama_kategori') border-red-400 @enderror">
             @error('nama_kategori')
@@ -46,7 +47,7 @@
             </label>
             <textarea name="deskripsi" rows="2"
                 placeholder="cth: Menu makanan berat"
-                class="w-full px-4 py-2.5 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#c5cb9f] resize-none">{{ old('deskripsi') }}</textarea>
+                class="w-full px-4 py-2.5 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#c5cb9f] resize-none">{{ old('deskripsi', $kategori->deskripsi ?? '') }}</textarea>
         </div>
 
         {{-- Tombol --}}
@@ -57,7 +58,7 @@
             </a>
             <button type="submit"
                 class="flex-1 bg-[#c5cb9f] text-[#5a4a2f] font-medium px-4 py-2.5 rounded-xl text-sm hover:bg-[#b5bb8f] transition">
-                Simpan Kategori
+                Update Kategori
             </button>
         </div>
     </form>
