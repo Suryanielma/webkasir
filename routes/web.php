@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BahanBakuController;
+use App\Http\Controllers\BukuKasirController; 
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -30,10 +32,7 @@ Route::middleware('auth')->group(function () {
 
         return view('menu', compact('kategoris', 'semua_produk'));
     })->name('menu');
-
-    Route::view('/menu', 'menu')->name('menu');
-    Route::view('/laporan', 'laporan')->name('laporan');
-    
+ 
     Route::resource('bahan-baku', BahanBakuController::class);
     Route::resource('kategori', KategoriController::class);
     Route::resource('produk', ProdukController::class);

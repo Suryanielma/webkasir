@@ -23,7 +23,7 @@
         </a>
 
         @if(Auth::user()->role !== 'Kasir')
-        <a href="{{ route('bahan-baku') }}" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl transition font-medium text-sm {{ request()->routeIs('bahan-baku') ? 'bg-[#f4ebd0] text-[#785b27]' : 'text-white hover:bg-white/20' }}">
+        <a href="{{ route('bahan-baku.index') }}" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl transition font-medium text-sm {{ request()->routeIs('bahan-baku.*') ? 'bg-[#f4ebd0] text-[#785b27]' : 'text-white hover:bg-white/20' }}">
             <span class="material-icons-outlined !text-[20px]">restaurant</span>
             <span>Bahan Baku</span>
         </a>

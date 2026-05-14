@@ -89,7 +89,7 @@
     <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
         <table class="w-full text-sm">
             <thead>
-                <tr class="border-b border-gray-100 text-gray-500 text-left">
+                <tr class="bg-[#8a7d55] text-white">
                     <th class="px-6 py-4 font-medium w-8">#</th>
                     <th class="px-6 py-4 font-medium">Nama Menu</th>
                     <th class="px-6 py-4 font-medium">Kategori</th>
