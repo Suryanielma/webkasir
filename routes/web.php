@@ -6,6 +6,7 @@ use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BahanBakuController;
 use App\Http\Controllers\BukuKasirController; 
+use App\Http\Controllers\TransaksiKasirController;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -17,7 +18,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::middleware('auth')->group(function () {
     Route::view('/dashboard', 'dashboard')->name('dashboard');
-    Route::view('/transaksi', 'transaksi')->name('transaksi');
+    Route::get('/transaksi', [TransaksiKasirController::class, 'index'])->name('transaksi')->middleware('role:Kasir');
     Route::view('/laporan', 'laporan')->name('laporan');
 
     // Menu — load kategori & produk, support filter

@@ -9,10 +9,12 @@
             <span class="material-icons-outlined !text-[20px]">dashboard</span>
             <span>Dashboard</span>
         </a>
+        @if(Auth::user()->role === 'Kasir')
         <a href="{{ route('transaksi') }}" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl transition font-medium text-sm {{ request()->routeIs('transaksi') ? 'bg-[#f4ebd0] text-[#785b27]' : 'text-white hover:bg-white/20' }}">
             <span class="material-icons-outlined !text-[20px]">shopping_cart</span>
             <span>Transaksi</span>
         </a>
+        @endif
         <a href="{{ route('menu') }}" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl transition font-medium text-sm {{ request()->routeIs('menu', 'kategori.*', 'produk.*') ? 'bg-[#f4ebd0] text-[#785b27]' : 'text-white hover:bg-white/20' }}">
             <span class="material-icons-outlined !text-[20px]">menu_book</span>
             <span>Menu</span>
@@ -33,4 +35,16 @@
         </a>
         @endif
     </nav>
+    <div class="mt-auto border-t border-black pt-4">
+        <div class="flex items-center space-x-3">
+            <div class="w-8 h-8 rounded-full bg-gray-200 border border-gray-400 flex items-center justify-center">
+                <span class="material-icons-outlined !text-[18px]">person</span>
+            </div>
+            <span class="font-bold text-sm">{{ Auth::user()->role }} : {{ Auth::user()->username }}</span>
+        </div>
+        <form action="{{ route('logout') }}" method="POST" class="mt-4">
+            @csrf
+            <button type="submit" class="w-full py-1.5 bg-red-600/80 text-white rounded font-medium text-sm">Logout</button>
+        </form>
+    </div>
 </aside>
