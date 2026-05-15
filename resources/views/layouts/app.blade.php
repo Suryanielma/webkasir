@@ -28,6 +28,25 @@
 
     <!-- Chart.js for graphs if needed -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener('alpine:init', () => {
+            Alpine.data('jam', () => ({
+                waktu: '',
+                init() {
+                    this.updateTime();
+                    setInterval(() => {
+                        this.updateTime();
+                    }, 1000);
+                },
+                updateTime() {
+                    const now = new Date();
+                    const hours = String(now.getHours()).padStart(2, '0');
+                    const minutes = String(now.getMinutes()).padStart(2, '0');
+                    this.waktu = hours + ':' + minutes;
+                }
+            }));
+        });
+    </script>
     @stack('scripts')
 </body>
 </html>

@@ -35,12 +35,15 @@
         </a>
         @endif
     </nav>
-    <div class="mt-auto border-t border-black pt-4">
-        <div class="flex items-center space-x-3">
-            <div class="w-8 h-8 rounded-full bg-gray-200 border border-gray-400 flex items-center justify-center">
+    <div class="mt-auto border-t border-black pt-4 px-2" x-data="jam()">
+        <div class="flex items-center space-x-3 text-black">
+            <div class="w-8 h-8 rounded-full bg-gray-200 border border-gray-400 flex items-center justify-center flex-shrink-0">
                 <span class="material-icons-outlined !text-[18px]">person</span>
             </div>
-            <span class="font-bold text-sm">{{ Auth::user()->role }} : {{ Auth::user()->username }}</span>
+            <span class="font-bold text-[15px] flex-1">
+                {{ Auth::user() ? Auth::user()->role : 'Kasir' }} : {{ Auth::user() ? ucfirst(Auth::user()->username) : 'Naomi' }} 
+            </span>
+            <span class="font-bold text-[15px]" x-text="waktu"></span>
         </div>
         <form action="{{ route('logout') }}" method="POST" class="mt-4">
             @csrf

@@ -44,26 +44,11 @@
         <div class="bg-[#f7f4e9] rounded-2xl p-5 border shadow-sm flex flex-col flex-1 relative" style="border-color: #d1d5db;">
             <div class="flex justify-between items-center mb-4">
                 <h3 class="text-lg font-bold font-serif">Detail Pesanan</h3>
-                <div class="relative" @click.away="showOrderTypeDropdown = false">
-                    <button @click="showOrderTypeDropdown = !showOrderTypeDropdown" 
-                            class="px-3 py-1 rounded-full text-xs font-semibold bg-transparent border transition-colors"
-                            :class="orderType === 'Makan di Tempat' ? 'text-green-700 border-green-700 hover:bg-green-50 bg-[#eef7ec]' : 'text-red-600 border-red-600 hover:bg-red-50 bg-[#fde9e9]'"
-                            x-text="orderType">
-                    </button>
-                    
-                    <div x-show="showOrderTypeDropdown" 
-                         x-transition
-                         class="absolute right-0 mt-2 w-36 bg-white rounded-lg shadow-lg border border-gray-200 z-10 overflow-hidden">
-                        <button @click="orderType = 'Makan di Tempat'; showOrderTypeDropdown = false" 
-                                class="w-full text-left px-4 py-2 text-xs font-semibold text-green-700 hover:bg-green-50 border-b border-gray-100">
-                            Makan di Tempat
-                        </button>
-                        <button @click="orderType = 'Bawa Pulang'; showOrderTypeDropdown = false" 
-                                class="w-full text-left px-4 py-2 text-xs font-semibold text-red-600 hover:bg-red-50">
-                            Bawa Pulang
-                        </button>
-                    </div>
-                </div>
+                <button @click="showInfoModal = true" 
+                        class="px-3 py-1 rounded border border-gray-400 text-xs font-semibold hover:bg-gray-200 transition-colors flex items-center gap-1">
+                    <span class="material-icons-outlined !text-[14px]">edit</span>
+                    Edit Info
+                </button>
             </div>
             
             <div class="flex-1 overflow-y-auto pr-1">
@@ -99,28 +84,62 @@
             <div class="border-t border-black mb-4"></div>
             
             <div class="flex justify-between items-center mb-3">
-                <span class="text-sm font-medium">Atas Nama</span>
-                <span class="text-sm font-semibold bg-[#c5cb9f] px-3 py-1 rounded">Kalista</span>
+                <span class="text-sm font-medium">Tipe Pesanan</span>
+                <span class="text-sm font-semibold bg-[#c5cb9f] px-3 py-1 rounded" x-text="orderType"></span>
             </div>
-            <div class="flex justify-between items-center mb-5">
+            <div class="flex justify-between items-center mb-3">
+                <span class="text-sm font-medium">Atas Nama</span>
+                <span class="text-sm font-semibold bg-[#c5cb9f] px-3 py-1 rounded" x-text="customerName || '-'"></span>
+            </div>
+            <div class="flex justify-between items-center mb-5" x-show="orderType === 'Makan di Tempat'">
                 <span class="text-sm font-medium">No Meja</span>
-                <span class="text-sm font-semibold bg-[#c5cb9f] px-3 py-1 rounded">03</span>
+                <span class="text-sm font-semibold bg-[#c5cb9f] px-3 py-1 rounded" x-text="tableNumber || '-'"></span>
             </div>
 
-            <div class="flex justify-between items-center mb-3">
-                <span class="font-bold">Bayar</span>
-                <span class="font-bold bg-[#c5cb9f] px-3 py-1 rounded">Rp 50.000</span>
-            </div>
-            <div class="border-t border-black mb-3"></div>
-            <div class="flex justify-between items-center mb-5">
-                <span class="font-bold">Kembalian</span>
-                <span class="font-bold">Rp 20.000</span>
-            </div>
             <div class="border-t border-black mb-5"></div>
 
             <button class="w-full py-2.5 bg-[#c5cb9f] text-black font-bold rounded-lg hover:bg-[#b0b885] transition-colors" :disabled="items.length === 0" :class="{'opacity-50 cursor-not-allowed': items.length === 0}">
-                Cetak Struk
+                Bayar
             </button>
+        </div>
+    </div>
+
+    <!-- Modal Edit Info -->
+    <div x-show="showInfoModal" 
+         x-transition.opacity
+         class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center backdrop-blur-sm"
+         style="display: none;">
+        <div @click.away="showInfoModal = false" 
+             class="bg-[#f7f4e9] rounded-2xl w-[400px] overflow-hidden shadow-xl border border-[#c5cb9f]"
+             x-transition.scale.origin.bottom>
+            <div class="p-5 border-b border-[#c5cb9f] flex justify-between items-center bg-[#e0e4c6]">
+                <h3 class="font-bold font-serif text-xl text-black">Informasi Pesanan</h3>
+                <button @click="showInfoModal = false" class="text-black hover:text-gray-700">
+                    <span class="material-icons-outlined">close</span>
+                </button>
+            </div>
+            <div class="p-6 flex flex-col gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-black mb-1">Tipe Pesanan</label>
+                    <select x-model="orderType" class="w-full px-3 py-2 border border-black rounded focus:outline-none focus:ring-1 focus:ring-[#6a4f21] bg-white text-black">
+                        <option value="Makan di Tempat">Makan di Tempat</option>
+                        <option value="Bawa Pulang">Bawa Pulang</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-black mb-1">Atas Nama</label>
+                    <input type="text" x-model="customerName" class="w-full px-3 py-2 border border-black rounded focus:outline-none focus:ring-1 focus:ring-[#6a4f21] bg-white text-black">
+                </div>
+                <div x-show="orderType === 'Makan di Tempat'" x-transition>
+                    <label class="block text-sm font-medium text-black mb-1">No Meja</label>
+                    <input type="number" x-model="tableNumber" class="w-full px-3 py-2 border border-black rounded focus:outline-none focus:ring-1 focus:ring-[#6a4f21] bg-white text-black">
+                </div>
+            </div>
+            <div class="p-4 border-t border-[#c5cb9f] flex justify-end bg-transparent">
+                <button @click="showInfoModal = false" class="px-6 py-2 bg-[#c5cb9f] hover:bg-[#b0b885] text-black font-bold rounded transition-colors shadow-sm">
+                    Simpan
+                </button>
+            </div>
         </div>
     </div>
 </div>
@@ -131,7 +150,9 @@ document.addEventListener('alpine:init', () => {
     Alpine.data('cart', () => ({
         items: [],
         orderType: 'Makan di Tempat',
-        showOrderTypeDropdown: false,
+        customerName: '',
+        tableNumber: '',
+        showInfoModal: false,
         
         get total() {
             return this.items.reduce((sum, item) => sum + (item.price * item.qty), 0);
