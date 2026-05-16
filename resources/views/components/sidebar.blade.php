@@ -19,9 +19,9 @@
             <span class="material-icons-outlined !text-[20px]">menu_book</span>
             <span>Menu</span>
         </a>
-        <a href="{{ route('buku-kasir') }}" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl transition font-medium text-sm {{ request()->routeIs('buku-kasir') ? 'bg-[#f4ebd0] text-[#785b27]' : 'text-white hover:bg-white/20' }}">
+        <a href="{{ route('sesi-kasir') }}" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl transition font-medium text-sm {{ request()->routeIs('sesi-kasir') ? 'bg-[#f4ebd0] text-[#785b27]' : 'text-white hover:bg-white/20' }}">
             <span class="material-icons-outlined !text-[20px]">calculate</span>
-            <span>Buku Kasir</span>
+            <span>Sesi Kasir</span>
         </a>
 
         @if(Auth::user()->role !== 'Kasir')

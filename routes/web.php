@@ -5,7 +5,7 @@ use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BahanBakuController;
-use App\Http\Controllers\BukuKasirController; 
+use App\Http\Controllers\SesiKasirController; 
 use App\Http\Controllers\TransaksiKasirController;
 
 Route::get('/', function () {
@@ -39,5 +39,9 @@ Route::middleware('auth')->group(function () {
     Route::resource('produk', ProdukController::class);
     Route::patch('produk/{id}/toggle-status', [ProdukController::class, 'toggleStatus'])->name('produk.toggleStatus');
 
-    Route::get('/buku-kasir', [BukuKasirController::class, 'index'])->name('buku-kasir');
+    Route::get('/sesi-kasir', [SesiKasirController::class, 'index'])->name('sesi-kasir');
+    Route::post('/sesi-kasir/buka', [SesiKasirController::class, 'bukaKasir'])->name('sesi-kasir.buka');
+    Route::post('/sesi-kasir/tutup', [SesiKasirController::class, 'tutupKasir'])->name('sesi-kasir.tutup');
+    Route::post('/transaksi/checkout', [TransaksiKasirController::class, 'store'])->name('transaksi.checkout');
+    Route::get('/transaksi/{id_transaksi}', [TransaksiKasirController::class, 'detail'])->name('transaksi.detail');
 });

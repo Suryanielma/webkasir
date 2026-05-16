@@ -14,4 +14,9 @@ class TransaksiPenjualan extends Model
     {
         return $this->hasMany(DetailTransaksi::class, 'id_transaksi', 'id_transaksi');
     }
+
+    public function sesiKasir()
+    {
+        return $this->belongsTo(SesiKasir::class, 'id_sesi', 'id_sesi');
+    }
 }

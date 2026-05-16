@@ -98,7 +98,7 @@
 
             <div class="border-t border-black mb-5"></div>
 
-            <button class="w-full py-2.5 bg-[#c5cb9f] text-black font-bold rounded-lg hover:bg-[#b0b885] transition-colors" :disabled="items.length === 0" :class="{'opacity-50 cursor-not-allowed': items.length === 0}">
+            <button @click="showPaymentModal = true" class="w-full py-2.5 bg-[#c5cb9f] text-black font-bold rounded-lg hover:bg-[#b0b885] transition-colors" :disabled="items.length === 0" :class="{'opacity-50 cursor-not-allowed': items.length === 0}">
                 Bayar
             </button>
         </div>
@@ -142,6 +142,54 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal Pembayaran -->
+    <div x-show="showPaymentModal" 
+         x-transition.opacity
+         class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center backdrop-blur-sm"
+         style="display: none;">
+        <div @click.away="showPaymentModal = false" 
+             class="bg-[#f7f4e9] rounded-2xl w-[400px] overflow-hidden shadow-xl border border-[#c5cb9f]"
+             x-transition.scale.origin.bottom>
+            <div class="p-5 border-b border-[#c5cb9f] flex justify-between items-center bg-[#e0e4c6]">
+                <h3 class="font-bold font-serif text-xl text-black">Pembayaran</h3>
+                <button @click="showPaymentModal = false" class="text-black hover:text-gray-700">
+                    <span class="material-icons-outlined">close</span>
+                </button>
+            </div>
+            <form action="{{ route('transaksi.checkout') }}" method="POST">
+                @csrf
+                <div class="p-6 flex flex-col gap-4">
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm font-medium">Total Tagihan:</span>
+                        <span class="text-lg font-bold" x-text="'Rp ' + formatRupiah(total)"></span>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-black mb-1">Jumlah Bayar</label>
+                        <input type="number" x-model.number="payAmount" min="0" class="w-full px-3 py-2 border border-black rounded focus:outline-none focus:ring-1 focus:ring-[#6a4f21] bg-white text-black" required>
+                    </div>
+                    <div class="flex justify-between items-center mt-2">
+                        <span class="text-sm font-medium">Kembalian:</span>
+                        <span class="text-lg font-bold" :class="payAmount >= total ? 'text-green-600' : 'text-red-600'" x-text="'Rp ' + formatRupiah(Math.max(0, payAmount - total))"></span>
+                    </div>
+                </div>
+                
+                <input type="hidden" name="total_harga" :value="total">
+                <input type="hidden" name="bayar" :value="payAmount">
+                <input type="hidden" name="kembalian" :value="Math.max(0, payAmount - total)">
+                <input type="hidden" name="items" :value="JSON.stringify(items.map(i => ({ id_produk: i.id, qty: i.qty, harga: i.price })))">
+
+                <div class="p-4 border-t border-[#c5cb9f] flex justify-end gap-2 bg-transparent">
+                    <button type="button" @click="showPaymentModal = false" class="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-black font-bold rounded transition-colors shadow-sm">
+                        Batal
+                    </button>
+                    <button type="submit" class="px-6 py-2 bg-[#c5cb9f] hover:bg-[#b0b885] text-black font-bold rounded transition-colors shadow-sm" :disabled="payAmount < total" :class="{'opacity-50 cursor-not-allowed': payAmount < total}">
+                        Proses Pembayaran
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 
 @push('scripts')
@@ -153,6 +201,8 @@ document.addEventListener('alpine:init', () => {
         customerName: '',
         tableNumber: '',
         showInfoModal: false,
+        showPaymentModal: false,
+        payAmount: 0,
         
         get total() {
             return this.items.reduce((sum, item) => sum + (item.price * item.qty), 0);
