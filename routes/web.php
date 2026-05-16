@@ -40,8 +40,11 @@ Route::middleware('auth')->group(function () {
     Route::patch('produk/{id}/toggle-status', [ProdukController::class, 'toggleStatus'])->name('produk.toggleStatus');
 
     Route::get('/sesi-kasir', [SesiKasirController::class, 'index'])->name('sesi-kasir');
+    Route::get('/buku-kasir', [SesiKasirController::class, 'bukuKasir'])->name('buku-kasir');
+    Route::get('/buku-kasir/{id_sesi}', [SesiKasirController::class, 'detailBukuKasir'])->name('buku-kasir.detail');
     Route::post('/sesi-kasir/buka', [SesiKasirController::class, 'bukaKasir'])->name('sesi-kasir.buka');
     Route::post('/sesi-kasir/tutup', [SesiKasirController::class, 'tutupKasir'])->name('sesi-kasir.tutup');
     Route::post('/transaksi/checkout', [TransaksiKasirController::class, 'store'])->name('transaksi.checkout');
+    Route::get('/transaksi/{id_transaksi}/struk', [TransaksiKasirController::class, 'struk'])->name('transaksi.struk');
     Route::get('/transaksi/{id_transaksi}', [TransaksiKasirController::class, 'detail'])->name('transaksi.detail');
 });

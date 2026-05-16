@@ -239,5 +239,15 @@ document.addEventListener('alpine:init', () => {
     }))
 })
 </script>
+
+@if(session('cetak_struk'))
+<script>
+    window.addEventListener('DOMContentLoaded', (event) => {
+        // Buka popup untuk print struk
+        const url = "{{ route('transaksi.struk', session('cetak_struk')) }}";
+        window.open(url, "StrukPembayaran", "width=400,height=600,left=200,top=100");
+    });
+</script>
+@endif
 @endpush
 @endsection

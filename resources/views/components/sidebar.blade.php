@@ -23,6 +23,10 @@
             <span class="material-icons-outlined !text-[20px]">calculate</span>
             <span>Sesi Kasir</span>
         </a>
+        <a href="{{ route('buku-kasir') }}" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl transition font-medium text-sm {{ request()->routeIs('buku-kasir') ? 'bg-[#f4ebd0] text-[#785b27]' : 'text-white hover:bg-white/20' }}">
+            <span class="material-icons-outlined !text-[20px]">book</span>
+            <span>Buku Kasir</span>
+        </a>
 
         @if(Auth::user()->role !== 'Kasir')
         <a href="{{ route('bahan-baku.index') }}" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl transition font-medium text-sm {{ request()->routeIs('bahan-baku.*') ? 'bg-[#f4ebd0] text-[#785b27]' : 'text-white hover:bg-white/20' }}">

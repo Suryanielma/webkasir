@@ -79,7 +79,16 @@ class TransaksiKasirController extends Controller
             ]);
         }
 
-        return redirect()->route('transaksi')->with('success', 'Transaksi berhasil disimpan!');
+        return redirect()->route('transaksi')->with([
+            'success' => 'Transaksi berhasil disimpan!',
+            'cetak_struk' => $transaksi->id_transaksi
+        ]);
+    }
+
+    public function struk($id_transaksi)
+    {
+        $transaksi = \App\Models\TransaksiPenjualan::with(['detailTransaksi.produk', 'sesiKasir.user'])->findOrFail($id_transaksi);
+        return view('transaksi-struk', compact('transaksi'));
     }
 
     public function detail($id_transaksi)

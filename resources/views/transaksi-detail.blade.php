@@ -9,7 +9,7 @@
             <p class="text-sm font-bold text-gray-500 font-serif">{{ \Carbon\Carbon::parse($transaksi->waktu_transaksi)->locale('id')->isoFormat('dddd, D MMMM YYYY H:mm') }}</p>
         </div>
         <div class="flex gap-2.5 relative top-2">
-            <a href="{{ route('sesi-kasir') }}" class="px-4 py-1.5 bg-[#c5cb9f] text-black font-semibold rounded border border-gray-400 text-sm hover:bg-[#b8be92] transition-colors">Kembali</a>
+            <a href="{{ url()->previous() }}" class="px-4 py-1.5 bg-[#c5cb9f] text-black font-semibold rounded border border-gray-400 text-sm hover:bg-[#b8be92] transition-colors">Kembali</a>
         </div>
     </div>
     

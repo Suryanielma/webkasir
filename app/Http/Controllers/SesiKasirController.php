@@ -37,4 +37,16 @@ class SesiKasirController extends Controller
         }
         return redirect()->route('sesi-kasir')->with('success', 'Sesi Kasir Berhasil Ditutup');
     }
+
+    public function bukuKasir()
+    {
+        $riwayatSesi = SesiKasir::with(['user', 'transaksiPenjualan'])->orderBy('waktu_buka', 'desc')->get();
+        return view('buku-kasir', compact('riwayatSesi'));
+    }
+
+    public function detailBukuKasir($id_sesi)
+    {
+        $sesi = SesiKasir::with(['user', 'transaksiPenjualan'])->findOrFail($id_sesi);
+        return view('buku-kasir-detail', compact('sesi'));
+    }
 }
