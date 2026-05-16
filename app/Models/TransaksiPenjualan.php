@@ -8,7 +8,7 @@ class TransaksiPenjualan extends Model
 {
     protected $table = 'transaksi_penjualan';
     protected $primaryKey = 'id_transaksi';
-    protected $fillable = ['id_sesi', 'waktu_transaksi', 'total_harga', 'bayar', 'kembalian'];
+    protected $fillable = ['id_sesi', 'waktu_transaksi', 'total_harga', 'bayar', 'kembalian', 'tipe_pesanan', 'nama_pembeli', 'nomor_meja'];
 
     public function detailTransaksi()
     {

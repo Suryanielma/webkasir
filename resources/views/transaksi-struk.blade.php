@@ -51,6 +51,20 @@
                 <td>Kasir</td>
                 <td>: {{ $transaksi->sesiKasir && $transaksi->sesiKasir->user ? $transaksi->sesiKasir->user->username : 'Unknown' }}</td>
             </tr>
+            <tr>
+                <td>Tipe</td>
+                <td>: {{ $transaksi->tipe_pesanan ?? '-' }}</td>
+            </tr>
+            <tr>
+                <td>Pelanggan</td>
+                <td>: {{ $transaksi->nama_pembeli ?? '-' }}</td>
+            </tr>
+            @if($transaksi->nomor_meja)
+            <tr>
+                <td>No Meja</td>
+                <td>: {{ $transaksi->nomor_meja }}</td>
+            </tr>
+            @endif
         </table>
     </div>
 

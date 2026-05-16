@@ -16,22 +16,38 @@
     <div class="border-t border-black mb-6"></div>
 
     <!-- Info Transaksi -->
-    <div class="bg-white rounded-lg border border-gray-400 p-6 mb-8 shadow-sm font-serif flex justify-between">
-        <div>
-            <p class="text-sm text-gray-600 mb-1">Kasir</p>
-            <p class="font-bold text-black">{{ $transaksi->sesiKasir->user->name ?? 'Unknown' }}</p>
+    <div class="bg-white rounded-lg border border-gray-400 p-6 mb-8 shadow-sm font-serif grid grid-cols-2 gap-6">
+        <div class="grid grid-cols-2 gap-4">
+            <div>
+                <p class="text-sm text-gray-600 mb-1">Kasir</p>
+                <p class="font-bold text-black">{{ $transaksi->sesiKasir->user->name ?? 'Unknown' }}</p>
+            </div>
+            <div>
+                <p class="text-sm text-gray-600 mb-1">Tipe Pesanan</p>
+                <p class="font-bold text-black">{{ $transaksi->tipe_pesanan ?? '-' }}</p>
+            </div>
+            <div>
+                <p class="text-sm text-gray-600 mb-1">Nama Pembeli</p>
+                <p class="font-bold text-black">{{ $transaksi->nama_pembeli ?? '-' }}</p>
+            </div>
+            <div>
+                <p class="text-sm text-gray-600 mb-1">No Meja</p>
+                <p class="font-bold text-black">{{ $transaksi->nomor_meja ?? '-' }}</p>
+            </div>
         </div>
-        <div>
-            <p class="text-sm text-gray-600 mb-1">Total Belanja</p>
-            <p class="font-bold text-black">Rp {{ number_format($transaksi->total_harga, 0, ',', '.') }}</p>
-        </div>
-        <div>
-            <p class="text-sm text-gray-600 mb-1">Bayar</p>
-            <p class="font-bold text-green-700">Rp {{ number_format($transaksi->bayar, 0, ',', '.') }}</p>
-        </div>
-        <div>
-            <p class="text-sm text-gray-600 mb-1">Kembalian</p>
-            <p class="font-bold text-red-700">Rp {{ number_format($transaksi->kembalian, 0, ',', '.') }}</p>
+        <div class="grid grid-cols-3 gap-4 border-l border-gray-300 pl-6">
+            <div>
+                <p class="text-sm text-gray-600 mb-1">Total Belanja</p>
+                <p class="font-bold text-black text-lg">Rp {{ number_format($transaksi->total_harga, 0, ',', '.') }}</p>
+            </div>
+            <div>
+                <p class="text-sm text-gray-600 mb-1">Bayar</p>
+                <p class="font-bold text-green-700 text-lg">Rp {{ number_format($transaksi->bayar, 0, ',', '.') }}</p>
+            </div>
+            <div>
+                <p class="text-sm text-gray-600 mb-1">Kembalian</p>
+                <p class="font-bold text-red-700 text-lg">Rp {{ number_format($transaksi->kembalian, 0, ',', '.') }}</p>
+            </div>
         </div>
     </div>
 

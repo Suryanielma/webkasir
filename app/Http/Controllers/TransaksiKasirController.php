@@ -67,6 +67,9 @@ class TransaksiKasirController extends Controller
             'total_harga' => $request->total_harga,
             'bayar' => $request->bayar,
             'kembalian' => $request->kembalian,
+            'tipe_pesanan' => $request->tipe_pesanan,
+            'nama_pembeli' => $request->nama_pembeli,
+            'nomor_meja' => $request->nomor_meja,
         ]);
 
         // 2. Simpan Detail Transaksi

@@ -177,6 +177,9 @@
                 <input type="hidden" name="total_harga" :value="total">
                 <input type="hidden" name="bayar" :value="payAmount">
                 <input type="hidden" name="kembalian" :value="Math.max(0, payAmount - total)">
+                <input type="hidden" name="tipe_pesanan" :value="orderType">
+                <input type="hidden" name="nama_pembeli" :value="customerName">
+                <input type="hidden" name="nomor_meja" :value="tableNumber">
                 <input type="hidden" name="items" :value="JSON.stringify(items.map(i => ({ id_produk: i.id, qty: i.qty, harga: i.price })))">
 
                 <div class="p-4 border-t border-[#c5cb9f] flex justify-end gap-2 bg-transparent">
