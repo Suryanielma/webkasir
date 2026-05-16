@@ -28,7 +28,6 @@ class TransaksiKasirController extends Controller
         if ($request->filled('search')) {
             $query->where('nama_produk', 'like', '%' . $request->search . '%');
         }
-        $query->where('status', 'Tersedia'); // Asumsikan hanya yang tersedia
         $produk = $query->get();
 
         return view('transaksi', compact('kategoris', 'produk'));

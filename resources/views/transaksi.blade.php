@@ -26,9 +26,9 @@
             @endforeach
         </div>
 
-        <!-- Grid Menu -->
-        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 overflow-y-auto pr-2 pb-10 border-b border-gray-300">
-            @foreach($produk as $p)
+        <!-- Grid Menu Tersedia -->
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 overflow-y-auto pr-2">
+            @foreach($produk->whereIn('status', ['Tersedia', 'tersedia']) as $p)
                 <div @click="addToCart({{ $p->id_produk }}, '{{ addslashes($p->nama_produk) }}', {{ $p->harga }}, '{{ $p->gambar ? asset('storage/' . $p->gambar) : asset('images/default-menu.png') }}')" class="bg-[#d2d5b5] rounded-lg p-3 border border-gray-400/60 flex flex-col items-center cursor-pointer hover:shadow-md transition-shadow">
                     <img src="{{ $p->gambar ? asset('storage/' . $p->gambar) : asset('images/default-menu.png') }}" alt="{{ $p->nama_produk }}" class="w-full h-32 object-cover rounded-md mb-2">
                     <h3 class="text-black font-medium text-center">{{ $p->nama_produk }}</h3>
@@ -36,6 +36,22 @@
                 </div>
             @endforeach
         </div>
+
+        @if($produk->whereNotIn('status', ['Tersedia', 'tersedia'])->count() > 0)
+        <!-- Garis Pemisah -->
+        <div class="border-t border-gray-400 my-6 mr-2"></div>
+
+        <!-- Grid Menu Habis -->
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 overflow-y-auto pr-2 pb-10 border-b border-gray-300">
+            @foreach($produk->whereNotIn('status', ['Tersedia', 'tersedia']) as $p)
+                <div class="bg-gray-300 rounded-lg p-3 border border-gray-400/60 flex flex-col items-center cursor-not-allowed opacity-70">
+                    <img src="{{ $p->gambar ? asset('storage/' . $p->gambar) : asset('images/default-menu.png') }}" alt="{{ $p->nama_produk }}" class="w-full h-32 object-cover rounded-md mb-2 grayscale">
+                    <h3 class="text-gray-600 font-medium text-center">{{ $p->nama_produk }}</h3>
+                    <p class="text-gray-500 font-semibold text-center">Rp.{{ number_format($p->harga, 0, ',', '.') }}</p>
+                </div>
+            @endforeach
+        </div>
+        @endif
     </div>
 
     <!-- Area Pesanan (Kanan) -->

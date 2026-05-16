@@ -33,7 +33,7 @@
 <body onload="window.print();">
     <div class="text-center mb-2">
         <h2 style="margin:0; font-size: 16px;">SOTO MBA RATIH</h2>
-        <p style="margin:2px 0 0 0;">Jl. Contoh Alamat No. 123</p>
+        <p style="margin:2px 0 0 0;">Jl. karanganyar No. 123</p>
         <p style="margin:0;">Telp: 0812-3456-7890</p>
     </div>
 
