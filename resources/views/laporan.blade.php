@@ -92,49 +92,51 @@
     
     <div class="grid grid-cols-3 gap-6">
         <!-- Pendapatan -->
-        <div class="border border-gray-400 rounded-xl p-6 bg-[#eff1db] shadow-sm">
-            <h4 class="text-gray-500 font-semibold mb-6">A. Pendapatan</h4>
-            <div class="space-y-4 mb-8">
-                <div class="flex justify-between items-end border-b border-gray-400/40 pb-2">
-                    <span class="font-bold text-sm w-1/2">Pendapatan Total</span>
-                    <span class="font-bold text-sm text-right">Rp <br>{{ number_format($totalPenjualan, 0, ',', '.') }}</span>
+        <div class="border border-gray-400 rounded-xl p-6 bg-[#eff1db] shadow-sm flex flex-col">
+            <h4 class="text-sm text-gray-500 font-semibold mb-6">A. Pendapatan</h4>
+            <div class="space-y-4 flex-grow">
+                <div class="flex justify-between items-center border-b border-gray-400/40 pb-2">
+                    <span class="font-bold text-sm">Pendapatan Total</span>
+                    <span class="font-bold text-sm text-right">Rp {{ number_format($totalPenjualan, 0, ',', '.') }}</span>
                 </div>
             </div>
-            <div class="flex justify-between items-end border-none pt-2">
+            <div class="flex justify-between items-center border-none pt-2 mt-4 mt-auto">
                 <span class="font-bold text-sm">Total Pendapatan</span>
-                <span class="font-bold text-sm text-green-600">Rp <br>{{ number_format($totalPenjualan, 0, ',', '.') }}</span>
+                <span class="font-bold text-sm text-green-600">Rp {{ number_format($totalPenjualan, 0, ',', '.') }}</span>
             </div>
         </div>
 
         <!-- HPP -->
-        <div class="border border-gray-400 rounded-xl p-6 bg-[#eff1db] shadow-sm">
-            <h4 class="text-gray-500 font-semibold mb-6">B. HPP / Bahan Baku</h4>
-            <div class="space-y-4 mb-8">
-                <div class="flex justify-between items-end border-b border-gray-400/40 pb-2">
-                    <span class="font-bold text-sm w-1/2">Bahan Baku Total</span>
-                    <span class="font-bold text-sm text-right">Rp <br>{{ number_format($totalHpp, 0, ',', '.') }}</span>
+        <div class="border border-gray-400 rounded-xl p-6 bg-[#eff1db] shadow-sm flex flex-col">
+            <h4 class="text-sm text-gray-500 font-semibold mb-6">B. HPP / Bahan Baku</h4>
+            <div class="space-y-4 flex-grow">
+                <div class="flex justify-between items-center border-b border-gray-400/40 pb-2">
+                    <span class="font-bold text-sm">Bahan Baku Total</span>
+                    <span class="font-bold text-sm text-right">Rp {{ number_format($totalHpp, 0, ',', '.') }}</span>
                 </div>
             </div>
-            <div class="flex justify-between items-end border-none pt-2">
+            <div class="flex justify-between items-center border-none pt-2 mt-4 mt-auto">
                 <span class="font-bold text-sm">Total HPP</span>
-                <span class="font-bold text-sm text-green-600">Rp <br>{{ number_format($totalHpp, 0, ',', '.') }}</span>
+                <span class="font-bold text-sm text-green-600">Rp {{ number_format($totalHpp, 0, ',', '.') }}</span>
             </div>
         </div>
 
         <!-- Formula -->
-        <div class="border border-gray-400 rounded-xl p-6 bg-[#eff1db] shadow-sm">
-            <h4 class="text-gray-500 font-semibold mb-6">C. Formula Laba Kotor</h4>
-            <div class="flex items-center gap-2 mb-6">
-                <span class="px-3 py-1 border border-green-500 text-green-600 rounded-full text-xs font-semibold">Total Pendapatan</span>
-                <span>-</span>
-                <span class="px-3 py-1 border border-[#e53935] text-[#e53935] rounded-full text-xs font-semibold">Total HPP</span>
+        <div class="border border-gray-400 rounded-xl p-6 bg-[#eff1db] shadow-sm flex flex-col">
+            <h4 class="text-sm text-gray-500 font-semibold mb-6">C. Formula Laba Kotor</h4>
+            <div class="flex-grow">
+                <div class="flex items-center gap-2 mb-4">
+                    <span class="px-3 py-1 border border-green-500 text-green-600 rounded-full text-xs font-semibold">Total Pendapatan</span>
+                    <span>-</span>
+                    <span class="px-3 py-1 border border-[#e53935] text-[#e53935] rounded-full text-xs font-semibold">Total HPP</span>
+                </div>
+                <div class="flex justify-between items-center border-b border-gray-400/40 pb-4">
+                    <span class="font-bold text-sm">Rp {{ number_format($totalPenjualan, 0, ',', '.') }}</span>
+                    <span>-</span>
+                    <span class="font-bold text-sm">Rp {{ number_format($totalHpp, 0, ',', '.') }}</span>
+                </div>
             </div>
-            <div class="flex justify-between items-center border-b border-gray-400/40 pb-4 mb-4">
-                <span class="font-bold text-sm">Rp {{ number_format($totalPenjualan, 0, ',', '.') }}</span>
-                <span>-</span>
-                <span class="font-bold text-sm">Rp {{ number_format($totalHpp, 0, ',', '.') }}</span>
-            </div>
-            <div class="flex justify-between items-end border-none pt-2">
+            <div class="flex justify-between items-center border-none pt-2 mt-4 mt-auto">
                 <span class="font-bold text-sm">Total</span>
                 <span class="font-bold text-sm text-green-600">Rp {{ number_format($labaKotor, 0, ',', '.') }}</span>
             </div>

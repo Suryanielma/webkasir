@@ -6,10 +6,10 @@
 
 <div class="flex justify-between items-center mb-8">
     <h2 class="text-2xl font-bold tracking-tight">Dashboard</h2>
-    <div class="relative group">
-        <input type="text" id="datePicker" class="bg-[#d8dbbc] text-[#333] pl-4 pr-8 py-2 rounded-full text-xs font-semibold cursor-pointer shadow-sm outline-none w-28 text-center" value="29/04/2025" readonly>
+    <form id="dateForm" action="{{ route('dashboard') }}" method="GET" class="relative group">
+        <input type="text" name="date" id="datePicker" class="bg-[#d8dbbc] text-[#333] pl-4 pr-8 py-2 rounded-full text-xs font-semibold cursor-pointer shadow-sm outline-none w-28 text-center" value="{{ $dateStr }}" onchange="document.getElementById('dateForm').submit()" readonly>
         <span class="material-icons-outlined text-xs absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-[#333]">arrow_drop_down</span>
-    </div>
+    </form>
 </div>
 
 <div class="flex flex-col gap-6">
@@ -118,8 +118,8 @@
 
         <!-- Status Menu -->
          <div class="w-auto flex-grow" style="width: 37.5%;">
-            <div class="border border-gray-400/40 rounded-2xl p-6 bg-transparent h-full shadow-sm max-h-64 overflow-y-auto">
-                <h3 class="text-base font-semibold text-gray-800 mb-4 sticky top-0 bg-white">Status Menu</h3>
+            <div class="border border-gray-400/40 rounded-2xl p-6 bg-transparent h-full shadow-sm max-h-64 overflow-y-auto relative">
+                <h3 class="text-base font-semibold text-gray-800 mb-4 sticky top-0 bg-[#f7f5ed] py-1 z-10 -mx-2 px-2">Status Menu</h3>
                 
                 <table class="w-full text-xs text-left">
                     <thead>
@@ -150,8 +150,18 @@
 </div>
 
 @push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        flatpickr("#datePicker", {
+            dateFormat: "d/m/Y",
+            defaultDate: "{{ $dateStr }}",
+            allowInput: true,
+            onChange: function(selectedDates, dateStr, instance) {
+                document.getElementById('dateForm').submit();
+            }
+        });
+
         if(typeof Chart !== 'undefined') {
             const ctx = document.getElementById('salesChart').getContext('2d');
             
@@ -238,18 +248,8 @@
                 }
             });
         }
-        
-        // Initialize Flatpickr Calendar
-        if (typeof flatpickr !== 'undefined') {
-            flatpickr("#datePicker", {
-                dateFormat: "d/m/Y",
-                defaultDate: "29/04/2025",
-                disableMobile: true
-            });
-        }
     });
 </script>
 <!-- Flatpickr JS -->
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 @endpush
 @endsection
