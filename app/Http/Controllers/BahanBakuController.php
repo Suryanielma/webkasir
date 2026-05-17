@@ -147,4 +147,55 @@ class BahanBakuController extends Controller
         return redirect()->route('bahan-baku.index')
             ->with('success', 'Data belanja berhasil dihapus.');
     }
+
+    /**
+     * Form edit item detail.
+     */
+    public function editDetail(BahanBaku $bahanBaku, DetailBahanBaku $detail)
+    {
+        if ($detail->bahan_baku_id !== $bahanBaku->id) {
+            abort(403, 'Unauthorized');
+        }
+
+        return view('BahanBaku.edit-detail', compact('bahanBaku', 'detail'));
+    }
+
+    /**
+     * Update item detail.
+     */
+    public function updateDetail(Request $request, BahanBaku $bahanBaku, DetailBahanBaku $detail)
+    {
+        if ($detail->bahan_baku_id !== $bahanBaku->id) {
+            abort(403, 'Unauthorized');
+        }
+
+        $request->validate([
+            'nama_bahan'  => 'required|string|max:255',
+            'qty'         => 'required|numeric|min:0.01',
+            'satuan'      => 'required|string|max:20',
+            'harga_total' => 'required|numeric|min:0',
+        ]);
+
+        $detail->update($request->only(['nama_bahan', 'qty', 'satuan', 'harga_total']));
+        $bahanBaku->recalculateTotal();
+
+        return redirect()->route('bahan-baku.show', $bahanBaku)
+            ->with('success', 'Item belanja berhasil diperbarui.');
+    }
+
+    /**
+     * Hapus item detail dari belanja.
+     */
+    public function destroyDetail(BahanBaku $bahanBaku, DetailBahanBaku $detail)
+    {
+        if ($detail->bahan_baku_id !== $bahanBaku->id) {
+            abort(403, 'Unauthorized');
+        }
+
+        $detail->delete();
+        $bahanBaku->recalculateTotal();
+
+        return redirect()->route('bahan-baku.show', $bahanBaku)
+            ->with('success', 'Item belanja berhasil dihapus.');
+    }
 }

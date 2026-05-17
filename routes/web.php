@@ -36,6 +36,10 @@ Route::middleware('auth')->group(function () {
     })->name('menu');
  
     Route::resource('bahan-baku', BahanBakuController::class);
+    Route::get('/bahan-baku/{bahan_baku}/detail/{detail}/edit', [BahanBakuController::class, 'editDetail'])->name('bahan-baku.detail.edit');
+    Route::put('/bahan-baku/{bahan_baku}/detail/{detail}', [BahanBakuController::class, 'updateDetail'])->name('bahan-baku.detail.update');
+    Route::delete('/bahan-baku/{bahan_baku}/detail/{detail}', [BahanBakuController::class, 'destroyDetail'])->name('bahan-baku.detail.destroy');
+    
     Route::resource('kategori', KategoriController::class);
     Route::resource('produk', ProdukController::class);
     Route::patch('produk/{id}/toggle-status', [ProdukController::class, 'toggleStatus'])->name('produk.toggleStatus');

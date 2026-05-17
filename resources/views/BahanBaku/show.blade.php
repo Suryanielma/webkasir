@@ -15,10 +15,17 @@
 
 {{-- Info Transaksi --}}
 <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-6">
-    <h3 class="font-bold text-gray-800 mb-4 flex items-center gap-2">
-        <span class="material-icons-outlined !text-[18px] text-[#8a7d55]">info</span>
-        Informasi Pembelian
-    </h3>
+    <div class="flex items-center justify-between mb-4">
+        <h3 class="font-bold text-gray-800 flex items-center gap-2">
+            <span class="material-icons-outlined !text-[18px] text-[#8a7d55]">info</span>
+            Informasi Pembelian
+        </h3>
+        <a href="{{ route('bahan-baku.edit', $bahanBaku) }}"
+            class="inline-flex items-center gap-2 bg-blue-50 hover:bg-blue-100 text-blue-700 text-sm font-semibold px-4 py-2 rounded-lg border border-blue-200 transition">
+            <span class="material-icons-outlined !text-[16px]">edit</span>
+            Edit
+        </a>
+    </div>
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
         <div>
             <p class="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-1.5">Tanggal Pembelian</p>
@@ -63,6 +70,7 @@
                 <th class="px-6 py-3 text-left font-semibold">Nama Bahan</th>
                 <th class="px-6 py-3 text-center font-semibold">Qty</th>
                 <th class="px-6 py-3 text-right font-semibold">Harga Total</th>
+                <th class="px-6 py-3 text-center font-semibold">Aksi</th>
             </tr>
         </thead>
         <tbody class="divide-y divide-gray-100">
@@ -77,6 +85,26 @@
                 </td>
                 <td class="px-6 py-4 text-right font-semibold text-gray-800">
                     Rp {{ number_format($detail->harga_total, 0, ',', '.') }}
+                </td>
+                <td class="px-6 py-4 text-center">
+                    <div class="flex items-center justify-center gap-2">
+                        <a href="{{ route('bahan-baku.detail.edit', [$bahanBaku, $detail]) }}"
+                            class="p-1.5 bg-blue-50 hover:bg-blue-100 text-blue-600 rounded-lg transition"
+                            title="Edit item">
+                            <span class="material-icons-outlined !text-[16px]">edit</span>
+                        </a>
+                        <form method="POST" action="{{ route('bahan-baku.detail.destroy', [$bahanBaku, $detail]) }}"
+                            onsubmit="return confirm('Hapus item belanja ini?')"
+                            class="inline">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit"
+                                class="p-1.5 bg-red-50 hover:bg-red-100 text-red-600 rounded-lg transition"
+                                title="Hapus item">
+                                <span class="material-icons-outlined !text-[16px]">delete</span>
+                            </button>
+                        </form>
+                    </div>
                 </td>
             </tr>
             @endforeach
@@ -94,23 +122,16 @@
             </p>
             <p class="text-xs text-gray-400 mt-1">{{ $bahanBaku->details->count() }} item belanja</p>
         </div>
-        <div class="flex gap-3">
-            <a href="{{ route('bahan-baku.edit', $bahanBaku) }}"
-                class="flex items-center gap-2 bg-blue-50 hover:bg-blue-100 text-blue-700 text-sm font-semibold px-5 py-2.5 rounded-xl border border-blue-200 transition">
-                <span class="material-icons-outlined !text-[18px]">edit</span>
-                Edit
-            </a>
-            <form method="POST" action="{{ route('bahan-baku.destroy', $bahanBaku) }}"
-                onsubmit="return confirm('Hapus data belanja ini?')">
-                @csrf
-                @method('DELETE')
-                <button type="submit"
-                    class="flex items-center gap-2 bg-red-50 hover:bg-red-100 text-red-600 text-sm font-semibold px-5 py-2.5 rounded-xl border border-red-200 transition">
-                    <span class="material-icons-outlined !text-[18px]">delete</span>
-                    Hapus
-                </button>
-            </form>
-        </div>
+        <form method="POST" action="{{ route('bahan-baku.destroy', $bahanBaku) }}"
+            onsubmit="return confirm('Hapus data belanja ini?')">
+            @csrf
+            @method('DELETE')
+            <button type="submit"
+                class="flex items-center gap-2 bg-red-50 hover:bg-red-100 text-red-600 text-sm font-semibold px-5 py-2.5 rounded-xl border border-red-200 transition">
+                <span class="material-icons-outlined !text-[18px]">delete</span>
+                Hapus
+            </button>
+        </form>
     </div>
 </div>
 
