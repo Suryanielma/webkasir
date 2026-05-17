@@ -17,10 +17,10 @@
 
     <!-- Info Transaksi -->
     <div class="bg-white rounded-lg border border-gray-400 p-6 mb-8 shadow-sm font-serif grid grid-cols-2 gap-6">
-        <div class="grid grid-cols-2 gap-4">
+            <div class="grid grid-cols-2 gap-4">
             <div>
                 <p class="text-sm text-gray-600 mb-1">Kasir</p>
-                <p class="font-bold text-black">{{ $transaksi->sesiKasir->user->name ?? 'Unknown' }}</p>
+                <p class="font-bold text-black">{{ $transaksi->sesiKasir->user->username ?? 'Unknown' }}</p>
             </div>
             <div>
                 <p class="text-sm text-gray-600 mb-1">Tipe Pesanan</p>
