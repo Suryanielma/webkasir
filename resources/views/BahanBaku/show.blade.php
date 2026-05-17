@@ -4,10 +4,8 @@
 
 {{-- Header --}}
 <div class="flex items-center gap-3 mb-6">
-    <a href="{{ route('bahan-baku.index') }}"
-        class="flex items-center gap-1 bg-white border border-gray-300 text-gray-600 hover:bg-gray-50 text-sm px-3 py-2 rounded-xl shadow-sm transition">
-        <span class="material-icons-outlined !text-[18px]">chevron_left</span>
-        Kembali
+    <a href="{{ route('bahan-baku.index') }}" class="p-2 hover:bg-gray-100 rounded-xl transition">
+        <span class="material-icons-outlined text-gray-500">arrow_back</span>
     </a>
     <div>
         <h2 class="text-2xl font-bold tracking-tight text-gray-800">Detail Belanja</h2>
