@@ -125,20 +125,16 @@
                     <thead>
                         <tr class="border-b border-gray-400/40 font-semibold text-gray-800">
                             <th class="py-2 pb-3">Menu</th>
-                            <th class="py-2 pb-3">Status</th>
-                            <th class="py-2 pb-3 text-right">Stok</th>
+                            <th class="py-2 pb-3 text-right">Status</th>
                         </tr>
                     </thead>
                     <tbody class="text-gray-700">
                         @foreach ($statusMenu as $sm)
                         <tr class="border-b border-gray-400/40">
                             <td class="py-3">{{ $sm->nama_produk }}</td>
-                            <td class="py-3 flex items-center gap-2">
+                            <td class="py-3 flex items-center justify-end gap-2 text-right">
                                 <span class="w-2.5 h-2.5 rounded-full {{ strtolower($sm->status) == 'tersedia' ? 'bg-green-500' : 'bg-red-500' }}"></span> 
                                 {{ ucfirst($sm->status) }}
-                            </td>
-                            <td class="py-3 text-right {{ strtolower($sm->status) == 'tersedia' ? 'text-green-600' : 'text-red-500' }}">
-                                -
                             </td>
                         </tr>
                         @endforeach
