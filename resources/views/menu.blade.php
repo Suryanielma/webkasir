@@ -8,13 +8,15 @@
         {{-- Tab Produk --}}
         <button onclick="switchTab('produk')" id="btn-produk"
             class="flex items-center gap-1 font-medium px-4 py-2 rounded-xl text-sm transition bg-[#c5cb9f] text-[#5a4a2f]">
-            Produk <span class="material-icons-outlined !text-[16px]">expand_more</span>
+            Produk 
+            <!-- <span class="material-icons-outlined !text-[16px]">expand_more</span> -->
         </button>
 
         {{-- Tab Kategori --}}
         <button onclick="switchTab('kategori')" id="btn-kategori"
             class="flex items-center gap-1 font-medium px-4 py-2 rounded-xl text-sm transition border border-gray-300 text-gray-700 hover:bg-gray-50">
-            Kategori <span class="material-icons-outlined !text-[16px]">expand_more</span>
+            Kategori 
+            <!-- <span class="material-icons-outlined !text-[16px]">expand_more</span> -->
         </button>
 
         {{-- Tanggal --}}
@@ -179,29 +181,38 @@
         @php $emojis = ['🍲','🥤','🍟','🍜','🍛','🧆','🥗','🍱']; @endphp
 
         @forelse($kategoris as $index => $kategori)
-        <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 flex items-start gap-4 relative">
-            <div class="absolute top-3 right-3 flex gap-1">
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 flex flex-col h-full overflow-hidden">
+            
+            {{-- Emoji + Info --}}
+            <div class="flex items-start gap-4 p-5 flex-grow">
+                <div class="text-4xl mt-1">{{ $emojis[$index % count($emojis)] }}</div>
+                <div>
+                    <h3 class="font-semibold text-gray-800 text-lg">{{ $kategori->nama_kategori }}</h3>
+                    <p class="text-xs text-gray-400 mt-1">{{ $kategori->deskripsi ?? 'Tidak ada deskripsi' }}</p>
+                </div>
+            </div>
+
+            {{-- Tombol Edit & Hapus di Bawah --}}
+            <div class="flex items-center gap-2 px-4 py-3 bg-gray-50 border-t border-gray-100 mt-auto">
                 <a href="{{ route('kategori.edit', $kategori->id_kategori) }}"
-                    class="p-1.5 border border-gray-300 rounded-lg hover:bg-gray-50 transition">
-                    <span class="material-icons-outlined !text-[16px] text-gray-600">edit</span>
+                    class="flex-1 flex items-center justify-center gap-1.5 text-xs font-medium text-gray-600 bg-white border border-gray-200 rounded-lg py-2 hover:bg-gray-100 transition">
+                    <span class="material-icons-outlined !text-[16px]">edit</span>
+                    Edit
                 </a>
                 <form action="{{ route('kategori.destroy', $kategori->id_kategori) }}" method="POST"
-                    onsubmit="return confirm('Hapus kategori ini?')">
+                    onsubmit="return confirm('Hapus kategori ini?')" class="flex-1 flex">
                     @csrf @method('DELETE')
                     <button type="submit"
-                        class="p-1.5 border border-red-200 rounded-lg hover:bg-red-50 transition">
-                        <span class="material-icons-outlined !text-[16px] text-red-400">delete</span>
+                        class="w-full flex items-center justify-center gap-1.5 text-xs font-medium text-red-500 bg-white border border-red-100 rounded-lg py-2 hover:bg-red-50 transition">
+                        <span class="material-icons-outlined !text-[16px]">delete</span>
+                        Hapus
                     </button>
                 </form>
             </div>
-            <div class="text-4xl mt-1">{{ $emojis[$index % count($emojis)] }}</div>
-            <div class="pr-12">
-                <h3 class="font-semibold text-gray-800">{{ $kategori->nama_kategori }}</h3>
-                <p class="text-xs text-gray-400 mt-0.5">{{ $kategori->deskripsi ?? 'Tidak ada deskripsi' }}</p>
-            </div>
+
         </div>
         @empty
-        <div class="col-span-4 text-center text-gray-400 py-12">
+        <div class="col-span-1 sm:col-span-2 lg:col-span-3 xl:col-span-4 text-center text-gray-400 py-12">
             Belum ada kategori. Tambahkan kategori pertama!
         </div>
         @endforelse
