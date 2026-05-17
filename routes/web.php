@@ -17,9 +17,10 @@ Route::post('/login', [AuthController::class, 'authenticate'])->name('login.auth
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::middleware('auth')->group(function () {
-    Route::view('/dashboard', 'dashboard')->name('dashboard');
+    Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
     Route::get('/transaksi', [TransaksiKasirController::class, 'index'])->name('transaksi')->middleware('role:Kasir');
-    Route::view('/laporan', 'laporan')->name('laporan');
+    Route::get('/laporan', [App\Http\Controllers\LaporanController::class, 'index'])->name('laporan');
+    Route::get('/laporan/export', [App\Http\Controllers\LaporanController::class, 'export'])->name('laporan.export');
 
     // Menu — load kategori & produk, support filter
     Route::get('/menu', function () {

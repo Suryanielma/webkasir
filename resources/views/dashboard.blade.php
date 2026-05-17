@@ -21,7 +21,7 @@
             <div class="border border-gray-400/40 rounded-2xl p-6 bg-transparent h-full flex flex-col justify-between shadow-sm">
                 <h3 class="text-base font-semibold text-gray-800">Transaksi<br>Hari Ini</h3>
                 <div>
-                    <div class="text-3xl font-bold text-gray-900 my-4">150</div>
+                    <div class="text-3xl font-bold text-gray-900 my-4">{{ $transaksiHariIni }}</div>
                     <div class="bg-[#8b9967] text-white text-[10px] px-3 py-1 rounded-full w-max font-medium shadow-sm">Transaksi Selesai</div>
                 </div>
             </div>
@@ -30,7 +30,7 @@
             <div class="border border-gray-400/40 rounded-2xl p-6 bg-transparent h-full flex flex-col justify-between shadow-sm">
                 <h3 class="text-base font-semibold text-gray-800">Pendapatan</h3>
                 <div>
-                    <div class="text-3xl font-bold text-gray-900 my-4">4.5 jt</div>
+                    <div class="text-3xl font-bold text-gray-900 my-4">Rp {{ number_format($pendapatanHariIni, 0, ',', '.') }}</div>
                     <div class="bg-[#e45126] text-white text-[10px] px-3 py-1 rounded-full w-max font-medium shadow-sm">Rupiah (IDR)</div>
                 </div>
             </div>
@@ -42,8 +42,8 @@
             <div class="border border-gray-400/40 rounded-2xl p-6 bg-transparent h-full flex flex-col justify-between shadow-sm">
                 <h3 class="text-base font-semibold text-gray-800">Menu<br>Tersedia</h3>
                 <div>
-                    <div class="text-3xl font-bold text-gray-900 my-4">15</div>
-                    <div class="bg-[#4a8a25] text-white text-[10px] px-3 py-1 rounded-full w-max font-medium shadow-sm">Dari 19 Menu</div>
+                    <div class="text-3xl font-bold text-gray-900 my-4">{{ $menuTersedia }}</div>
+                    <div class="bg-[#4a8a25] text-white text-[10px] px-3 py-1 rounded-full w-max font-medium shadow-sm">Dari {{ $totalMenu }} Menu</div>
                 </div>
             </div>
 
@@ -51,7 +51,7 @@
             <div class="border border-gray-400/40 rounded-2xl p-6 bg-transparent h-full flex flex-col justify-between shadow-sm">
                 <h3 class="text-base font-semibold text-gray-800">Menu Habis</h3>
                 <div>
-                    <div class="text-3xl font-bold text-gray-900 my-4">4</div>
+                    <div class="text-3xl font-bold text-gray-900 my-4">{{ $menuHabis }}</div>
                     <div class="bg-[#d9822b] text-white text-[10px] px-3 py-1 rounded-full w-max font-medium shadow-sm">Perlu Diisi Ulang</div>
                 </div>
             </div>
@@ -76,7 +76,7 @@
             <div class="border border-gray-400/40 rounded-2xl p-6 bg-transparent h-full flex flex-col items-center justify-center text-center shadow-sm">
                 <h3 class="text-base font-semibold text-gray-800 mb-6 w-full text-left">Item Terjual</h3>
                 <span class="material-icons-outlined text-[#7a5924] text-3xl mb-4">fastfood</span>
-                <div class="text-3xl font-bold text-gray-900 mb-4">213</div>
+                <div class="text-3xl font-bold text-gray-900 mb-4">{{ $itemTerjualHariIni ?? 0 }}</div>
                 <div class="bg-[#7a5924] text-white text-[10px] px-3 py-1 rounded-full w-max font-medium shadow-sm">Porsi Per-hari ini</div>
                 <div class="mt-4"></div>
             </div>
@@ -96,17 +96,21 @@
                         </tr>
                     </thead>
                     <tbody class="text-gray-700">
-                        @for ($i = 1; $i <= 5; $i++)
+                        @forelse ($menuTerlaris as $index => $item)
                         <tr class="border-b border-gray-400/40 last:border-0">
                             <td class="py-3">
                                 <span class="bg-[#9e9d7c] text-white w-6 h-6 rounded-full inline-flex items-center justify-center text-[10px]">
-                                    {{ $i }}
+                                    {{ $index + 1 }}
                                 </span>
                             </td>
-                            <td class="py-3">Es Teh Manis</td>
-                            <td class="py-3 text-right text-green-600 font-medium whitespace-nowrap">200 Porsi</td>
+                            <td class="py-3">{{ $item->nama_produk }}</td>
+                            <td class="py-3 text-right text-green-600 font-medium whitespace-nowrap">{{ $item->total_terjual }} Porsi</td>
                         </tr>
-                        @endfor
+                        @empty
+                        <tr>
+                            <td colspan="3" class="py-3 text-center">Belum ada data</td>
+                        </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>
@@ -114,8 +118,8 @@
 
         <!-- Status Menu -->
          <div class="w-auto flex-grow" style="width: 37.5%;">
-            <div class="border border-gray-400/40 rounded-2xl p-6 bg-transparent h-full shadow-sm">
-                <h3 class="text-base font-semibold text-gray-800 mb-4">Status Menu</h3>
+            <div class="border border-gray-400/40 rounded-2xl p-6 bg-transparent h-full shadow-sm max-h-64 overflow-y-auto">
+                <h3 class="text-base font-semibold text-gray-800 mb-4 sticky top-0 bg-white">Status Menu</h3>
                 
                 <table class="w-full text-xs text-left">
                     <thead>
@@ -126,31 +130,18 @@
                         </tr>
                     </thead>
                     <tbody class="text-gray-700">
+                        @foreach ($statusMenu as $sm)
                         <tr class="border-b border-gray-400/40">
-                            <td class="py-3">Soto Ayam</td>
-                            <td class="py-3 flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-green-500"></span> Tersedia</td>
-                            <td class="py-3 text-right text-green-600">50 Porsi</td>
+                            <td class="py-3">{{ $sm->nama_produk }}</td>
+                            <td class="py-3 flex items-center gap-2">
+                                <span class="w-2.5 h-2.5 rounded-full {{ strtolower($sm->status) == 'tersedia' ? 'bg-green-500' : 'bg-red-500' }}"></span> 
+                                {{ ucfirst($sm->status) }}
+                            </td>
+                            <td class="py-3 text-right {{ strtolower($sm->status) == 'tersedia' ? 'text-green-600' : 'text-red-500' }}">
+                                -
+                            </td>
                         </tr>
-                        <tr class="border-b border-gray-400/40">
-                            <td class="py-3">Soto Daging</td>
-                            <td class="py-3 flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-green-500"></span> Tersedia</td>
-                            <td class="py-3 text-right text-green-600">52 Porsi</td>
-                        </tr>
-                        <tr class="border-b border-gray-400/40">
-                            <td class="py-3">Es Teh Manis</td>
-                            <td class="py-3 flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-yellow-500"></span> Hampir Habis</td>
-                            <td class="py-3 text-right text-yellow-600">5 Porsi</td>
-                        </tr>
-                        <tr class="border-b border-gray-400/40">
-                            <td class="py-3">Es Jeruk</td>
-                            <td class="py-3 flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-green-500"></span> Tersedia</td>
-                            <td class="py-3 text-right text-green-600">42 Porsi</td>
-                        </tr>
-                        <tr>
-                            <td class="py-3">Nasi Putih</td>
-                            <td class="py-3 flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-red-500"></span> Habis</td>
-                            <td class="py-3 text-right text-red-500">0 Porsi</td>
-                        </tr>
+                        @endforeach
                     </tbody>
                 </table>
             </div>
@@ -172,10 +163,10 @@
             new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'],
+                    labels: {!! json_encode($grafikLabel) !!},
                     datasets: [{
                         label: 'Penjualan',
-                        data: [70000, 380000, 320000, 680000, 480000, 950000, 950000],
+                        data: {!! json_encode($grafikPenjualan) !!},
                         borderColor: '#e24d17',
                         borderWidth: 3,
                         pointBackgroundColor: '#e24d17',
