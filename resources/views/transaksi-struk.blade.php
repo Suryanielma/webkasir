@@ -49,7 +49,7 @@
             </tr>
             <tr>
                 <td>Kasir</td>
-                <td>: {{ $transaksi->sesiKasir && $transaksi->sesiKasir->user ? $transaksi->sesiKasir->user->username : 'Unknown' }}</td>
+                <td>: {{ $transaksi->nama_kasir ?? ($transaksi->sesiKasir && $transaksi->sesiKasir->user ? $transaksi->sesiKasir->user->username : 'Unknown') }}</td>
             </tr>
             <tr>
                 <td>Tipe</td>

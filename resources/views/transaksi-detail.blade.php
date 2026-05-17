@@ -20,7 +20,7 @@
             <div class="grid grid-cols-2 gap-4">
             <div>
                 <p class="text-sm text-gray-600 mb-1">Kasir</p>
-                <p class="font-bold text-black">{{ $transaksi->sesiKasir->user->username ?? 'Unknown' }}</p>
+                <p class="font-bold text-black">{{ $transaksi->nama_kasir ?? $transaksi->sesiKasir->user->username ?? 'Unknown' }}</p>
             </div>
             <div>
                 <p class="text-sm text-gray-600 mb-1">Tipe Pesanan</p>

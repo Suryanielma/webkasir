@@ -38,10 +38,7 @@
         </div>
 
         @if($produk->whereNotIn('status', ['Tersedia', 'tersedia'])->count() > 0)
-        <!-- Garis Pemisah -->
         <div class="border-t border-gray-400 my-6 mr-2"></div>
-
-        <!-- Grid Menu Habis -->
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 overflow-y-auto pr-2 pb-10 border-b border-gray-300">
             @foreach($produk->whereNotIn('status', ['Tersedia', 'tersedia']) as $p)
                 <div class="bg-gray-300 rounded-lg p-3 border border-gray-400/60 flex flex-col items-center cursor-not-allowed opacity-70">
@@ -107,6 +104,10 @@
                 <span class="text-sm font-medium">Atas Nama</span>
                 <span class="text-sm font-semibold bg-[#c5cb9f] px-3 py-1 rounded" x-text="customerName || '-'"></span>
             </div>
+            <div class="flex justify-between items-center mb-3">
+                <span class="text-sm font-medium">Kasir</span>
+                <span class="text-sm font-semibold bg-[#c5cb9f] px-3 py-1 rounded" x-text="kasirName || '-'"></span>
+            </div>
             <div class="flex justify-between items-center mb-5" x-show="orderType === 'Makan di Tempat'">
                 <span class="text-sm font-medium">No Meja</span>
                 <span class="text-sm font-semibold bg-[#c5cb9f] px-3 py-1 rounded" x-text="tableNumber || '-'"></span>
@@ -145,6 +146,10 @@
                 <div>
                     <label class="block text-sm font-medium text-black mb-1">Atas Nama</label>
                     <input type="text" x-model="customerName" class="w-full px-3 py-2 border border-black rounded focus:outline-none focus:ring-1 focus:ring-[#6a4f21] bg-white text-black">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-black mb-1">Nama Kasir</label>
+                    <input type="text" x-model="kasirName" class="w-full px-3 py-2 border border-black rounded focus:outline-none focus:ring-1 focus:ring-[#6a4f21] bg-white text-black" placeholder="Nama kasir yang bertugas...">
                 </div>
                 <div x-show="orderType === 'Makan di Tempat'" x-transition>
                     <label class="block text-sm font-medium text-black mb-1">No Meja</label>
@@ -196,6 +201,7 @@
                 <input type="hidden" name="tipe_pesanan" :value="orderType">
                 <input type="hidden" name="nama_pembeli" :value="customerName">
                 <input type="hidden" name="nomor_meja" :value="tableNumber">
+                <input type="hidden" name="nama_kasir" :value="kasirName">
                 <input type="hidden" name="items" :value="JSON.stringify(items.map(i => ({ id_produk: i.id, qty: i.qty, harga: i.price })))">
 
                 <div class="p-4 border-t border-[#c5cb9f] flex justify-end gap-2 bg-transparent">
@@ -219,6 +225,7 @@ document.addEventListener('alpine:init', () => {
         orderType: 'Makan di Tempat',
         customerName: '',
         tableNumber: '',
+        kasirName: '{{ $namaKasirDefault }}',
         showInfoModal: false,
         showPaymentModal: false,
         payAmount: 0,
@@ -262,7 +269,6 @@ document.addEventListener('alpine:init', () => {
 @if(session('cetak_struk'))
 <script>
     window.addEventListener('DOMContentLoaded', (event) => {
-        // Buka popup untuk print struk
         const url = "{{ route('transaksi.struk', session('cetak_struk')) }}";
         window.open(url, "StrukPembayaran", "width=400,height=600,left=200,top=100");
     });
