@@ -1,54 +1,77 @@
 @extends('layouts.app')
 
 @section('content')
+
+@php
+    $produkArray = $produk->map(function($p) {
+        return [
+            'id_produk'   => $p->id_produk,
+            'nama_produk' => $p->nama_produk,
+            'harga'       => $p->harga,
+            'status'      => $p->status,
+            'id_kategori' => $p->id_kategori,
+            'gambar_url'  => $p->gambar
+                ? asset('storage/' . $p->gambar)
+                : asset('images/default-menu.png'),
+        ];
+    })->values();
+@endphp
+
 <div x-data="cart()" class="flex gap-6 h-[calc(100vh-4rem)]">
     <!-- Area Menu (Kiri) -->
     <div class="flex-1 flex flex-col">
         <div class="flex justify-between items-center mb-6">
             <h2 class="text-3xl font-bold font-serif text-black">Menu</h2>
             <div class="relative w-72">
-                <form action="{{ route('transaksi') }}" method="GET">
-                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari" class="w-full pl-4 pr-10 py-2 rounded-lg border border-gray-400 bg-transparent focus:outline-none focus:ring-1 focus:ring-[#6a4f21]">
-                    <button type="submit" class="absolute right-3 top-2.5">    
-                        <span class="material-icons-outlined text-black !text-[20px]">search</span>
-                    </button>
-                </form>
+                <input type="text" x-model="searchQuery"
+                       placeholder="Cari"
+                       class="w-full pl-4 pr-10 py-2 rounded-lg border border-gray-400 bg-transparent focus:outline-none focus:ring-1 focus:ring-[#6a4f21]">
+                <span class="absolute right-3 top-2.5 material-icons-outlined text-black !text-[20px]">search</span>
             </div>
         </div>
 
         <!-- Filter Kategori -->
-        <div class="flex gap-3 mb-6 overflow-x-auto">
-            <a href="{{ route('transaksi') }}" class="px-4 py-1.5 rounded border border-gray-400 {{ !request('kategori') ? 'bg-[#c5cb9f] text-black font-medium' : 'bg-transparent text-black' }}">Semua</a>
+        <div class="flex gap-3 mb-6 overflow-x-auto flex-nowrap pb-1">
+            <button @click="filterKategori(null)"
+                :class="activeKategori === null ? 'bg-[#c5cb9f] text-black font-medium' : 'bg-transparent text-black'"
+                class="px-4 py-1.5 rounded border border-gray-400 flex-shrink-0 whitespace-nowrap">
+                Semua
+            </button>
             @foreach($kategoris as $kat)
-                <a href="{{ route('transaksi', ['kategori' => $kat->id_kategori]) }}" class="px-4 py-1.5 rounded border border-gray-400 {{ request('kategori') == $kat->id_kategori ? 'bg-[#c5cb9f] text-black font-medium' : 'bg-transparent text-black' }}">
+                <button @click="filterKategori({{ $kat->id_kategori }})"
+                    :class="activeKategori === {{ $kat->id_kategori }} ? 'bg-[#c5cb9f] text-black font-medium' : 'bg-transparent text-black'"
+                    class="px-4 py-1.5 rounded border border-gray-400 flex-shrink-0 whitespace-nowrap">
                     {{ $kat->nama_kategori }}
-                </a>
+                </button>
             @endforeach
         </div>
 
         <!-- Grid Menu Tersedia -->
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 overflow-y-auto pr-2">
-            @foreach($produk->whereIn('status', ['Tersedia', 'tersedia']) as $p)
-                <div @click="addToCart({{ $p->id_produk }}, '{{ addslashes($p->nama_produk) }}', {{ $p->harga }}, '{{ $p->gambar ? asset('storage/' . $p->gambar) : asset('images/default-menu.png') }}')" class="bg-[#d2d5b5] rounded-lg p-3 border border-gray-400/60 flex flex-col items-center cursor-pointer hover:shadow-md transition-shadow">
-                    <img src="{{ $p->gambar ? asset('storage/' . $p->gambar) : asset('images/default-menu.png') }}" alt="{{ $p->nama_produk }}" class="w-full h-32 object-cover rounded-md mb-2">
-                    <h3 class="text-black font-medium text-center">{{ $p->nama_produk }}</h3>
-                    <p class="text-[#8c6729] font-semibold text-center">Rp.{{ number_format($p->harga, 0, ',', '.') }}</p>
+            <template x-for="p in produkTersedia" :key="p.id_produk">
+                <div @click="addToCart(p.id_produk, p.nama_produk, p.harga, p.gambar_url)"
+                     class="bg-[#d2d5b5] rounded-lg p-3 border border-gray-400/60 flex flex-col items-center cursor-pointer hover:shadow-md transition-shadow">
+                    <img :src="p.gambar_url" :alt="p.nama_produk" class="w-full h-32 object-cover rounded-md mb-2">
+                    <h3 class="text-black font-medium text-center" x-text="p.nama_produk"></h3>
+                    <p class="text-[#8c6729] font-semibold text-center" x-text="'Rp.' + formatRupiah(p.harga)"></p>
                 </div>
-            @endforeach
+            </template>
         </div>
 
-        @if($produk->whereNotIn('status', ['Tersedia', 'tersedia'])->count() > 0)
-        <div class="border-t border-gray-400 my-6 mr-2"></div>
-        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 overflow-y-auto pr-2 pb-10 border-b border-gray-300">
-            @foreach($produk->whereNotIn('status', ['Tersedia', 'tersedia']) as $p)
-                <div class="bg-gray-300 rounded-lg p-3 border border-gray-400/60 flex flex-col items-center cursor-not-allowed opacity-70">
-                    <img src="{{ $p->gambar ? asset('storage/' . $p->gambar) : asset('images/default-menu.png') }}" alt="{{ $p->nama_produk }}" class="w-full h-32 object-cover rounded-md mb-2 grayscale">
-                    <h3 class="text-gray-600 font-medium text-center">{{ $p->nama_produk }}</h3>
-                    <p class="text-gray-500 font-semibold text-center">Rp.{{ number_format($p->harga, 0, ',', '.') }}</p>
+        <template x-if="produkHabis.length > 0">
+            <div>
+                <div class="border-t border-gray-400 my-6 mr-2"></div>
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 overflow-y-auto pr-2 pb-10 border-b border-gray-300">
+                    <template x-for="p in produkHabis" :key="p.id_produk">
+                        <div class="bg-gray-300 rounded-lg p-3 border border-gray-400/60 flex flex-col items-center cursor-not-allowed opacity-70">
+                            <img :src="p.gambar_url" :alt="p.nama_produk" class="w-full h-32 object-cover rounded-md mb-2 grayscale">
+                            <h3 class="text-gray-600 font-medium text-center" x-text="p.nama_produk"></h3>
+                            <p class="text-gray-500 font-semibold text-center" x-text="'Rp.' + formatRupiah(p.harga)"></p>
+                        </div>
+                    </template>
                 </div>
-            @endforeach
-        </div>
-        @endif
+            </div>
+        </template>
     </div>
 
     <!-- Area Pesanan (Kanan) -->
@@ -57,13 +80,13 @@
         <div class="bg-[#f7f4e9] rounded-2xl p-5 border shadow-sm flex flex-col flex-1 relative" style="border-color: #d1d5db;">
             <div class="flex justify-between items-center mb-4">
                 <h3 class="text-lg font-bold font-serif">Detail Pesanan</h3>
-                <button @click="showInfoModal = true" 
+                <button @click="showInfoModal = true"
                         class="px-3 py-1 rounded border border-gray-400 text-xs font-semibold hover:bg-gray-200 transition-colors flex items-center gap-1">
                     <span class="material-icons-outlined !text-[14px]">edit</span>
                     Edit Info
                 </button>
             </div>
-            
+
             <div class="flex-1 overflow-y-auto pr-1">
                 <template x-for="item in items" :key="item.id">
                     <div class="flex gap-3 mb-4 pb-4 border-b border-black">
@@ -95,7 +118,7 @@
                 <span class="font-bold text-lg" x-text="'Rp ' + formatRupiah(total)"></span>
             </div>
             <div class="border-t border-black mb-4"></div>
-            
+
             <div class="flex justify-between items-center mb-3">
                 <span class="text-sm font-medium">Tipe Pesanan</span>
                 <span class="text-sm font-semibold bg-[#c5cb9f] px-3 py-1 rounded" x-text="orderType"></span>
@@ -122,11 +145,11 @@
     </div>
 
     <!-- Modal Edit Info -->
-    <div x-show="showInfoModal" 
+    <div x-show="showInfoModal"
          x-transition.opacity
          class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center backdrop-blur-sm"
          style="display: none;">
-        <div @click.away="showInfoModal = false" 
+        <div @click.away="showInfoModal = false"
              class="bg-[#f7f4e9] rounded-2xl w-[400px] overflow-hidden shadow-xl border border-[#c5cb9f]"
              x-transition.scale.origin.bottom>
             <div class="p-5 border-b border-[#c5cb9f] flex justify-between items-center bg-[#e0e4c6]">
@@ -165,11 +188,11 @@
     </div>
 
     <!-- Modal Pembayaran -->
-    <div x-show="showPaymentModal" 
+    <div x-show="showPaymentModal"
          x-transition.opacity
          class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center backdrop-blur-sm"
          style="display: none;">
-        <div @click.away="showPaymentModal = false" 
+        <div @click.away="showPaymentModal = false"
              class="bg-[#f7f4e9] rounded-2xl w-[400px] overflow-hidden shadow-xl border border-[#c5cb9f]"
              x-transition.scale.origin.bottom>
             <div class="p-5 border-b border-[#c5cb9f] flex justify-between items-center bg-[#e0e4c6]">
@@ -194,7 +217,7 @@
                         <span class="text-lg font-bold" :class="payAmount >= total ? 'text-green-600' : 'text-red-600'" x-text="'Rp ' + formatRupiah(Math.max(0, payAmount - total))"></span>
                     </div>
                 </div>
-                
+
                 <input type="hidden" name="total_harga" :value="total">
                 <input type="hidden" name="bayar" :value="payAmount">
                 <input type="hidden" name="kembalian" :value="Math.max(0, payAmount - total)">
@@ -219,51 +242,77 @@
 
 @push('scripts')
 <script>
-document.addEventListener('alpine:init', () => {
-    Alpine.data('cart', () => ({
-        items: [],
-        orderType: 'Makan di Tempat',
-        customerName: '',
-        tableNumber: '',
-        kasirName: '{{ $namaKasirDefault }}',
-        showInfoModal: false,
-        showPaymentModal: false,
-        payAmount: 0,
-        
-        get total() {
-            return this.items.reduce((sum, item) => sum + (item.price * item.qty), 0);
-        },
+    const produkData = {!! json_encode($produkArray) !!};
 
-        addToCart(id, name, price, image) {
-            const existing = this.items.find(i => i.id === id);
-            if (existing) {
-                existing.qty++;
-            } else {
-                this.items.push({ id, name, price, image, qty: 1 });
-            }
-        },
+    document.addEventListener('alpine:init', () => {
+        Alpine.data('cart', () => ({
+            items: [],
+            orderType: 'Makan di Tempat',
+            customerName: '',
+            tableNumber: '',
+            kasirName: '{{ $namaKasirDefault }}',
+            showInfoModal: false,
+            showPaymentModal: false,
+            payAmount: 0,
 
-        increment(id) {
-            const item = this.items.find(i => i.id === id);
-            if (item) item.qty++;
-        },
+            allProduk: produkData,
+            activeKategori: null,
+            searchQuery: '',
 
-        decrement(id) {
-            const item = this.items.find(i => i.id === id);
-            if (item) {
-                if (item.qty > 1) {
-                    item.qty--;
+            get produkTersedia() {
+                return this.filtered().filter(p => p.status.toLowerCase() === 'tersedia');
+            },
+
+            get produkHabis() {
+                return this.filtered().filter(p => p.status.toLowerCase() !== 'tersedia');
+            },
+
+            filtered() {
+                return this.allProduk.filter(p => {
+                    const matchKat = this.activeKategori === null || p.id_kategori == this.activeKategori;
+                    const matchSearch = p.nama_produk.toLowerCase().includes(this.searchQuery.toLowerCase());
+                    return matchKat && matchSearch;
+                });
+            },
+
+            filterKategori(id) {
+                this.activeKategori = id;
+            },
+
+            get total() {
+                return this.items.reduce((sum, item) => sum + (item.price * item.qty), 0);
+            },
+
+            addToCart(id, name, price, image) {
+                const existing = this.items.find(i => i.id === id);
+                if (existing) {
+                    existing.qty++;
                 } else {
-                    this.items = this.items.filter(i => i.id !== id);
+                    this.items.push({ id, name, price, image, qty: 1 });
                 }
-            }
-        },
+            },
 
-        formatRupiah(number) {
-            return new Intl.NumberFormat('id-ID').format(number);
-        }
-    }))
-})
+            increment(id) {
+                const item = this.items.find(i => i.id === id);
+                if (item) item.qty++;
+            },
+
+            decrement(id) {
+                const item = this.items.find(i => i.id === id);
+                if (item) {
+                    if (item.qty > 1) {
+                        item.qty--;
+                    } else {
+                        this.items = this.items.filter(i => i.id !== id);
+                    }
+                }
+            },
+
+            formatRupiah(number) {
+                return new Intl.NumberFormat('id-ID').format(number);
+            }
+        }))
+    })
 </script>
 
 @if(session('cetak_struk'))
