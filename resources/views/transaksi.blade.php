@@ -19,8 +19,8 @@
 
 <div x-data="cart()" class="flex flex-col xl:flex-row gap-6 min-h-screen xl:h-[calc(100vh-6rem)]">
     
-    <div class="flex-1 flex flex-col min-w-0">
-        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+    <div class="flex-1 flex flex-col min-w-0 h-full">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 flex-shrink-0">
             <h2 class="text-2xl md:text-3xl font-bold text-gray-950 tracking-tight">Menu</h2>
             <div class="relative w-full sm:w-72">
                 <input type="text" x-model="searchQuery"
@@ -30,7 +30,7 @@
             </div>
         </div>
 
-        <div class="flex gap-2 mb-6 overflow-x-auto flex-nowrap pb-2 scrollbar-thin">
+        <div class="flex gap-2 mb-6 overflow-x-auto overflow-y-hidden flex-nowrap pb-2 scrollbar-thin flex-shrink-0">
             <button @click="filterKategori(null)"
                 :class="activeKategori === null ? 'bg-[#c5cb9f] text-[#5a4a2f] font-semibold border-[#c5cb9f]' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'"
                 class="px-4 py-2 rounded-xl border text-sm flex-shrink-0 whitespace-nowrap transition shadow-sm">
@@ -45,40 +45,43 @@
             @endforeach
         </div>
 
-        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-4 overflow-y-auto pr-1 flex-1 items-start content-start min-h-[300px]">
-            <template x-for="p in produkTersedia" :key="p.id_produk">
-                <div @click="addToCart(p.id_produk, p.nama_produk, p.harga, p.gambar_url)"
-                     class="bg-white rounded-2xl p-3 border border-gray-200 shadow-sm flex flex-col items-center cursor-pointer hover:shadow-md hover:border-[#c5cb9f]/60 transition group">
-                    <div class="w-full h-28 sm:h-32 rounded-xl overflow-hidden mb-2.5 bg-gray-50 flex-shrink-0">
-                        <img :src="p.gambar_url" :alt="p.nama_produk" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+        <div class="flex-1 overflow-y-auto pr-1 space-y-8 scrollbar-thin">
+            
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-4 items-start content-start">
+                <template x-for="p in produkTersedia" :key="p.id_produk">
+                    <div @click="addToCart(p.id_produk, p.nama_produk, p.harga, p.gambar_url)"
+                         class="bg-white rounded-2xl p-3 border border-gray-200 shadow-sm flex flex-col items-center cursor-pointer hover:shadow-md hover:border-[#c5cb9f]/60 transition group">
+                        <div class="w-full h-28 sm:h-32 rounded-xl overflow-hidden mb-2.5 bg-gray-50 flex-shrink-0">
+                            <img :src="p.gambar_url" :alt="p.nama_produk" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+                        </div>
+                        <h3 class="text-gray-900 font-semibold text-sm text-center line-clamp-1 mb-1" x-text="p.nama_produk"></h3>
+                        <p class="text-[#8c6729] font-bold text-sm text-center" x-text="'Rp ' + formatRupiah(p.harga)"></p>
                     </div>
-                    <h3 class="text-gray-900 font-semibold text-sm text-center line-clamp-1 flex-1 mb-1" x-text="p.nama_produk"></h3>
-                    <p class="text-[#8c6729] font-bold text-sm text-center" x-text="'Rp ' + formatRupiah(p.harga)"></p>
+                </template>
+            </div>
+
+            <template x-if="produkHabis.length > 0">
+                <div class="pt-2">
+                    <div class="border-t border-gray-300/60 mb-6"></div>
+                    <h4 class="text-xs font-bold text-gray-400 mb-4 uppercase tracking-wider">Menu Habis (Stok Kosong)</h4>
+                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-4 items-start content-start">
+                        <template x-for="p in produkHabis" :key="p.id_produk">
+                            <div class="bg-gray-100 rounded-2xl p-3 border border-gray-200 flex flex-col items-center cursor-not-allowed opacity-65 select-none">
+                                <div class="w-full h-28 sm:h-32 rounded-xl overflow-hidden mb-2.5 bg-gray-200 grayscale">
+                                    <img :src="p.gambar_url" :alt="p.nama_produk" class="w-full h-full object-cover">
+                                </div>
+                                <h3 class="text-gray-500 font-semibold text-sm text-center line-clamp-1 mb-1" x-text="p.nama_produk"></h3>
+                                <p class="text-gray-400 font-medium text-sm text-center" x-text="'Rp ' + formatRupiah(p.harga)"></p>
+                            </div>
+                        </template>
+                    </div>
                 </div>
             </template>
+            
         </div>
-
-        <template x-if="produkHabis.length > 0">
-            <div>
-                <div class="border-t border-gray-300/60 my-6 mr-1"></div>
-                <h4 class="text-xs font-bold text-gray-400 mb-3 uppercase tracking-wider">Menu Habis (Stok Kosong)</h4>
-                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-4 pr-1 pb-10">
-                    <template x-for="p in produkHabis" :key="p.id_produk">
-                        <div class="bg-gray-100 rounded-2xl p-3 border border-gray-200 flex flex-col items-center cursor-not-allowed opacity-65 select-none">
-                            <div class="w-full h-28 sm:h-32 rounded-xl overflow-hidden mb-2.5 bg-gray-200 grayscale">
-                                <img :src="p.gambar_url" :alt="p.nama_produk" class="w-full h-full object-cover">
-                            </div>
-                            <h3 class="text-gray-500 font-semibold text-sm text-center line-clamp-1" x-text="p.nama_produk"></h3>
-                            <p class="text-gray-400 font-medium text-sm text-center" x-text="'Rp ' + formatRupiah(p.harga)"></p>
-                        </div>
-                    </template>
-                </div>
-            </div>
-        </template>
     </div>
 
     <div class="w-full xl:w-[360px] 2xl:w-[400px] flex flex-col gap-4 flex-shrink-0">
-        
         <div class="bg-white rounded-2xl p-5 border border-gray-200 shadow-sm flex flex-col h-[350px] xl:flex-1 relative">
             <div class="flex justify-between items-center mb-4">
                 <h3 class="text-base font-bold text-gray-950">Detail Pesanan</h3>
@@ -156,13 +159,8 @@
         </div>
     </div>
 
-    <div x-show="showInfoModal"
-         x-transition.opacity
-         class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center backdrop-blur-sm"
-         x-cloak>
-        <div @click.away="showInfoModal = false"
-             class="bg-[#f7f4e9] rounded-2xl w-full max-w-[400px] mx-4 overflow-hidden shadow-xl border border-[#c5cb9f]"
-             x-transition.scale>
+    <div x-show="showInfoModal" x-transition.opacity class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center backdrop-blur-sm" x-cloak>
+        <div @click.away="showInfoModal = false" class="bg-[#f7f4e9] rounded-2xl w-full max-w-[400px] mx-4 overflow-hidden shadow-xl border border-[#c5cb9f]" x-transition.scale>
             <div class="p-5 border-b border-[#c5cb9f]/60 flex justify-between items-center bg-[#e0e4c6]">
                 <h3 class="font-bold text-lg text-black">Informasi Pesanan</h3>
                 <button @click="showInfoModal = false" class="text-black hover:text-gray-700">
@@ -171,22 +169,22 @@
             </div>
             <div class="p-6 flex flex-col gap-4">
                 <div>
-                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Tipe Pesanan</label>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Tipe Pesanan</label>
                     <select x-model="orderType" class="w-full px-3 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#c5cb9f] bg-white text-gray-800 text-sm">
                         <option value="Makan di Tempat">Makan di Tempat</option>
                         <option value="Bawa Pulang">Bawa Pulang</option>
                     </select>
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Atas Nama</label>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Atas Nama</label>
                     <input type="text" x-model="customerName" class="w-full px-3 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#c5cb9f] bg-white text-gray-800 text-sm">
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Nama Kasir</label>
-                    <input type="text" x-model="kasirName" class="w-full px-3 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#c5cb9f] bg-white text-gray-800 text-sm" placeholder="Nama kasir...">
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Nama Kasir</label>
+                    <input type="text" x-model="kasirName" class="w-full px-3 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#c5cb9f] bg-white text-gray-800 text-sm">
                 </div>
                 <div x-show="orderType === 'Makan di Tempat'" x-transition>
-                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">No Meja</label>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">No Meja</label>
                     <input type="number" x-model="tableNumber" class="w-full px-3 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#c5cb9f] bg-white text-gray-800 text-sm">
                 </div>
             </div>
@@ -198,13 +196,8 @@
         </div>
     </div>
 
-    <div x-show="showPaymentModal"
-         x-transition.opacity
-         class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center backdrop-blur-sm"
-         x-cloak>
-        <div @click.away="showPaymentModal = false"
-             class="bg-[#f7f4e9] rounded-2xl w-full max-w-[400px] mx-4 overflow-hidden shadow-xl border border-[#c5cb9f]"
-             x-transition.scale>
+    <div x-show="showPaymentModal" x-transition.opacity class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center backdrop-blur-sm" x-cloak>
+        <div @click.away="showPaymentModal = false" class="bg-[#f7f4e9] rounded-2xl w-full max-w-[400px] mx-4 overflow-hidden shadow-xl border border-[#c5cb9f]" x-transition.scale>
             <div class="p-5 border-b border-[#c5cb9f]/60 flex justify-between items-center bg-[#e0e4c6]">
                 <h3 class="font-bold text-lg text-black">Proses Pembayaran</h3>
                 <button @click="showPaymentModal = false" class="text-black hover:text-gray-700">
@@ -219,7 +212,7 @@
                         <span class="text-xl font-bold text-gray-900" x-text="'Rp ' + formatRupiah(total)"></span>
                     </div>
                     <div>
-                        <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Jumlah Uang Bayar</label>
+                        <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Jumlah Uang Bayar</label>
                         <input type="number" x-model.number="payAmount" min="0" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#c5cb9f] bg-white text-gray-900 font-bold text-base" required>
                     </div>
                     <div class="flex justify-between items-center p-2">
@@ -324,7 +317,6 @@
         }))
     })
 </script>
-
 @if(session('cetak_struk'))
 <script>
     window.addEventListener('DOMContentLoaded', (event) => {
